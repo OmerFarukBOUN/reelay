@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
- 
+
 #pragma once
 
 namespace reelay {
@@ -14,7 +14,7 @@ struct ptl_grammar {
 
   static constexpr auto grammar = R"(
     Expression  <- ExistsExpr / ForallExpr / Implicative
-    ExistsExpr  <- EXISTS '[' NonEmptyVarList ']' '.' Implicative 
+    ExistsExpr  <- EXISTS '[' NonEmptyVarList ']' '.' Implicative
     ForallExpr  <- FORALL '[' NonEmptyVarList ']' '.' Implicative
     Implicative <- Disjunctive (LIMPLIES Disjunctive)?
     Disjunctive <- Conjunctive (LOR Conjunctive)*
@@ -27,27 +27,27 @@ struct ptl_grammar {
     HistExpr <- HIST Atom / HIST '(' Expression ')'
     TimedOnceExpr <- ONCE Bound Atom / ONCE Bound '(' Expression ')'
     TimedHistExpr <- HIST Bound Atom / HIST Bound '(' Expression ')'
-    Atom <- CustomPredicate / RecordProposition 
-            
+    Atom <- CustomPredicate / RecordProposition
+
     CustomPredicate <- '$' LCURLY Name RCURLY
-    
+
     RecordProposition <- NestedAnyRecordProposition / NestedAllRecordProposition / NestedRecordProposition / SimpleRecordProposition
     NestedAnyRecordProposition <- PathKey 'any' LCURLY KeyValuePair (COMMA KeyValuePair)* RCURLY
     NestedAllRecordProposition <- PathKey 'all' LCURLY KeyValuePair (COMMA KeyValuePair)* RCURLY
     NestedRecordProposition <- PathKey LCURLY KeyValuePair (COMMA KeyValuePair)* RCURLY
     SimpleRecordProposition <- LCURLY KeyValuePair (COMMA KeyValuePair)* RCURLY
- 
+
     KeyValuePair <- RecordProposition/ KeyValuePairTrue / KeyValuePairFalse / KeyValuePairNumber / KeyValuePairString / KeyValuePairEQ / KeyValuePairNE / KeyValuePairLT / KeyValuePairLE / KeyValuePairGT / KeyValuePairGE / KeyValuePairReference / KeyValuePairAnyValue / KeyValueProp /ListingTrue / ListingFalse / ListingNumber / ListingString / ListingReference / ListingAnyValue / ListingEQ / ListingNE / ListingLT / ListingLE / ListingGT / ListingGE
 
     ArrayKey <- DOLLAR <[0-9]+>
-    FieldKey <- String
+    FieldKey <- String / URI
     PathKey <- (String COLCOL)+
 
     ListingTrue <- ArrayKey ':' TRUE
     ListingFalse <- ArrayKey ':' FALSE
     ListingNumber <- ArrayKey ':' Number
     ListingString <- ArrayKey ':' String
-    ListingAnyValue <- ArrayKey ':' STAR 
+    ListingAnyValue <- ArrayKey ':' STAR
     ListingReference <- ArrayKey ':' STAR Name
     ListingEQ <- ArrayKey EQ Number
     ListingNE <- ArrayKey NE Number
@@ -71,7 +71,7 @@ struct ptl_grammar {
     KeyValuePairGE <- FieldKey GE Number
 
     NonEmptyVarList <- Name (COMMA Name)*
-  
+
     Bound <- FullBound / LowerBound / UpperBound
     FullBound <-  "[" Number ":" Number "]"
     LowerBound <- "[" Number ":" 'inf'? "]"
@@ -82,6 +82,9 @@ struct ptl_grammar {
     DQString <- DQ <[^"]*> DQ
     Name   <- <[_a-zA-Z][_a-zA-Z0-9]*>
     Number <- <'-'? [0-9]+ ('.' [0-9]+)?>
+    URI <- '#' ('/' Object)+
+    Object <- Name ('/' Number)?
+
 
     ~EVENT <- < '@' / 'event' >
 
@@ -89,7 +92,7 @@ struct ptl_grammar {
     ~HIST  <- < 'H' / 'historically' >
     ~ONCE  <- < 'P' / 'once' >
     ~SINCE <- < 'S' / 'since' >
-            
+
     ~LOR      <- < "||" / 'or' >
     ~LAND     <- < "&&" / 'and' >
     ~LNOT     <- < "!"  / 'not' >
@@ -122,9 +125,21 @@ struct ptl_grammar {
 
     ~TRUE <- < 'true' >
     ~FALSE <- < 'false' >
-            
+
     %whitespace <- [  \t\r\n]*
     )";
 };
+
+// URI <- Scheme ':' Authority? Path  QuerryList FragmentList
+// Scheme <- < [a-zA-Z][a-zA-Z0-9+.-]* >
+// Authority <-  '//' Host ':' Port
+// Host <- < [a-zA-Z0-9.-]+ >
+// Port <- < [0-9]+ >
+// Path <- < [^?#]* >
+// QuerryList <- ('?' SettingQuerry)* ('?' PathQuerry)* ('?' SettingQuerry)*
+// SettingQuerry <- Name '=' < [^&#]* >
+// PathQuerry <- ('/' Name)+
+// FragmentList <- ('#' Fragment)*
+// Fragment <- < [^#]* >
 
 } // namespace reelay

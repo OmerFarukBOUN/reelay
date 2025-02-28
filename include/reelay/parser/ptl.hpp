@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
- 
+
 #pragma once
 
 #include <iostream>
@@ -15,6 +15,7 @@
 #include "reelay/third_party/cpp-peglib/peglib.h"
 //
 #include "reelay/parser/ptl_grammar.hpp"
+#include "reelay/parser/proto_node.hpp"
 //
 #include "reelay/options.hpp"
 #include "reelay/settings.hpp"
@@ -287,6 +288,25 @@ template <class NetworkT> struct ptl_parser : ptl_grammar{
       return keys;
     };
 
+    parser["URI"] = [&](const peg::SemanticValues &sv) {
+      auto keys = std::vector<std::string>();
+      for (std::size_t i = 0; i < sv.size(); i++) {
+        keys.push_back(reelay::any_cast<object>(sv[i]));
+      }
+      return keys;
+    };
+
+    parser["Object"]  = [&](const peg::SemanticValues &sv) {
+      object obj;
+      obj.key = reelay::any_cast<std::string>(sv[0]);
+      if (sv.size() > 1) {
+        obj.array_no = reelay::any_cast<int>(sv[1]);
+      } else {
+        obj.array_no = -1;
+      }
+      return obj;
+    }
+
     parser["ListingTrue"] = [&](const peg::SemanticValues &sv) {
       auto index = reelay::any_cast<int>(sv[0]);
 
@@ -412,7 +432,7 @@ template <class NetworkT> struct ptl_parser : ptl_grammar{
     //   auto func = meta[name];
 
     //   reelay::kwargs kw = {{"function", func}};
-    //   kw.insert(meta.begin(), meta.end()); 
+    //   kw.insert(meta.begin(), meta.end());
     //   auto expr = Setting::make_state("predicate", kw);
 
     //   this->states.push_back(expr);
@@ -602,7 +622,7 @@ template <class NetworkT> struct ptl_parser : ptl_grammar{
     };
 
     parser["SinceExpr"] = [&](const peg::SemanticValues &sv) {
-      
+
       if (sv.size() == 3) {
         node_ptr_t left = any_cast<node_ptr_t>(sv[0]);
         std::pair<float, float> bound =
@@ -698,7 +718,7 @@ template <class NetworkT> struct ptl_parser : ptl_grammar{
     parser.parse(pattern.c_str(), root);
     return network_t(root, states, options);
   }
-  
+
   std::shared_ptr<network_t> make_shared(const std::string &pattern, const options_t& options = options_t()) {
     node_ptr_t root;
     parser.parse(pattern.c_str(), root);

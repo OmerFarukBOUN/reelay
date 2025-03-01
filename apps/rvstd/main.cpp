@@ -1,6 +1,6 @@
 #include "rvstd/tableau.hpp"
 
 int main(void) {
-  rvstd::tableau tbl;
+  rvstd::tableau::tableau tbl;
   return 0;
 }

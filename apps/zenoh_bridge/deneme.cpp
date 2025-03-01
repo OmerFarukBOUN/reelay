@@ -85,7 +85,7 @@ class proto_node {
     proto_node() : array_no(-1), fieldDesc(nullptr), reflection(nullptr) {}
 
     proto_node(const google::protobuf::Message& msg, std::vector<object> path) {
-        message = msg.New();
+        message = &msg;
         this->msgDesc = message->GetDescriptor();
         fieldDesc = msgDesc->FindFieldByName(path[0].key);
         if (fieldDesc == nullptr) {
@@ -209,7 +209,9 @@ class proto_node {
                     case FieldDescriptor::CPPTYPE_UINT32:
                         converter =
                             [this](const google::protobuf::Message& msg) {
+                                std::cout << "control" << std::endl;
                                 message->GetReflection();
+                                std::cout << "control" << std::endl;
                                 return reflection->GetUInt32(msg, fieldDesc);
                             };
                         break;
@@ -262,6 +264,9 @@ class proto_node {
     }
 
     void update(const google::protobuf::Message& msg) {
+        std::cout << "update" << std::endl;
+        message->GetReflection();
+        std::cout << "control" << std::endl;
         if (children.size() > 0) {
             for (auto& child : children) {
                 if (child.second.array_no != -1) {
@@ -281,7 +286,6 @@ class proto_node {
 class proto_mapper {
    public:
     std::unordered_map<object, proto_node> children;
-    // google::protobuf::Message* mutable_msg;
     const google::protobuf::Message* prototype_msg;
 
     proto_mapper(std::string message_def_str, std::string message_type) {
@@ -320,31 +324,6 @@ class proto_mapper {
                 << "Cannot create prototype message from message descriptor";
             return;
         }
-        // mutable_msg = prototype_msg->New();
-        // if (mutable_msg == NULL) {
-        //     std::cerr
-        //         << "Failed in prototype_msg->New(); to create mutable
-        //         message";
-        //     return;
-        // }
-        // // mutable_msg = bruh->New();
-        // uint8_t buffer[] = {0x08, 0x00, 0x10, 0x64, 0x18, 0xF5, 0x2D};
-        // uint8_t buffer2[] = {0x08, 0x02, 0x10, 0x64, 0x18, 0xF5, 0x2D};
-        // if (!mutable_msg->ParseFromArray(buffer, 7)) {
-        //   std::cerr << "Failed to parse value in buffer";
-        // }
-        // // std::cout << mutable_msg->DebugString() << std::endl;
-        // const google::protobuf::FieldDescriptor* field =
-        // mutable_msg->GetDescriptor()->field(0); const
-        // google::protobuf::Reflection* reflection =
-        // mutable_msg->GetReflection(); google::protobuf::Message* new_msg =
-        // prototype_msg->New();
-
-        // if (!new_msg->ParseFromArray(buffer2, 7)) {
-        //   std::cerr << "Failed to parse value in buffer";
-        // }
-        // std::cout << reflection->GetUInt32(*new_msg, field) << std::endl;
-        // std::cout << mutable_msg->DebugString() << std::endl;
     }
 
     void add(const google::protobuf::Message& msg, std::vector<object> path) {
@@ -358,9 +337,13 @@ class proto_mapper {
 
     void update(const std::vector<uint8_t>& msg) {
         google::protobuf::Message* new_msg = prototype_msg->New();
+        prototype_msg->GetDescriptor();
+        children.at({"AppLedStateOn", -1}).message->GetDescriptor();
+        std::cout << "control" << std::endl;
         if (!new_msg->ParseFromArray(msg.data(), msg.size())) {
             std::cerr << "Failed to parse value in buffer";
         }
+        children.at({"AppLedStateOn", -1}).message->GetReflection();
         // std::cout << mutable_msg->DebugString() << std::endl;
         std::cout << new_msg->DebugString() << std::endl;
         for (auto& child : children) {
@@ -388,11 +371,13 @@ int main() {
     std::vector<object> path3 = {{"VDD", -1}};
     std::cout << "fifth" << std::endl;
     mapper.add(*mapper.prototype_msg, path1);
+    mapper.children.at(path1[0]).message->GetDescriptor();
     std::cout << "sixth" << std::endl;
     mapper.add(*mapper.prototype_msg, path2);
     std::cout << "seventh" << std::endl;
     mapper.add(*mapper.prototype_msg, path3);
     std::cout << "eighth" << std::endl;
+    mapper.prototype_msg->GetDescriptor();
     std::vector<uint8_t> buffer = {0x08, 0x02, 0x10, 0x64, 0x18, 0xF5, 0x2D};
     std::cout << "ninth" << std::endl;
     mapper.update(buffer);

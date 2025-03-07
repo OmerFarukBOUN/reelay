@@ -47,6 +47,7 @@ add_library(reelay INTERFACE)
 add_library(reelay::reelay ALIAS reelay)
 
 find_package(Boost 1.82.0 REQUIRED)
+find_package(Protobuf REQUIRED)
 
 find_library(cudd_static NAMES libcudd.a REQUIRED NO_CACHE)
 
@@ -55,7 +56,7 @@ target_include_directories(
   reelay INTERFACE $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include/>
                    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 
-target_link_libraries(reelay INTERFACE ${cudd_static})
+target_link_libraries(reelay INTERFACE ${cudd_static} protobuf::libprotobuf)
 
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/ DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
 install(

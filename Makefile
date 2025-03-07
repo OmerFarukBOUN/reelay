@@ -23,4 +23,3 @@ cryjson:
 
 cbenchmark:
 	docker build -t ghcr.io/doganulus/reelay-benchmark:latest docker/benchmark
-

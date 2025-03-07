@@ -84,6 +84,6 @@
         "typeindex": "cpp"
     },
     "C_Cpp.errorSquiggles": "enabled",
-    "editor.tabSize": 2,
+    "editor.tabSize": 4,
     "editor.insertSpaces": false
 }

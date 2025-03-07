@@ -281,6 +281,7 @@ template <class NetworkT> struct ptl_parser : ptl_grammar{
     };
 
     parser["FieldKey"] = [&](const peg::SemanticValues &sv) {
+      std::cout << "FieldKey" << std::endl;
       auto keys = std::vector<std::string>();
       for (std::size_t i = 0; i < sv.size(); i++) {
         keys.push_back(reelay::any_cast<std::string>(sv[i]));
@@ -288,24 +289,29 @@ template <class NetworkT> struct ptl_parser : ptl_grammar{
       return keys;
     };
 
+
+
     parser["URI"] = [&](const peg::SemanticValues &sv) {
-      auto keys = std::vector<std::string>();
+      std::cout << "URI" << std::endl;
+      auto path = std::vector<object>();
       for (std::size_t i = 0; i < sv.size(); i++) {
-        keys.push_back(reelay::any_cast<object>(sv[i]));
+        path.push_back(reelay::any_cast<object>(sv[i]));
       }
-      return keys;
+      global_proto_mapper->add(path);
+      return last_token_no;
     };
 
     parser["Object"]  = [&](const peg::SemanticValues &sv) {
+      std::cout << "Object" << std::endl;
       object obj;
       obj.key = reelay::any_cast<std::string>(sv[0]);
       if (sv.size() > 1) {
-        obj.array_no = reelay::any_cast<int>(sv[1]);
+        obj.array_no = std::stoi(reelay::any_cast<std::string>(sv[1]));
       } else {
         obj.array_no = -1;
       }
       return obj;
-    }
+    };
 
     parser["ListingTrue"] = [&](const peg::SemanticValues &sv) {
       auto index = reelay::any_cast<int>(sv[0]);

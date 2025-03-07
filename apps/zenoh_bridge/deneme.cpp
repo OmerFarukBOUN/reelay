@@ -1,3 +1,4 @@
+
 // #include "reelay/monitors.hpp"
 // #include "reelay/parser/ptl_inspector.hpp"
 // #include "zenoh.hxx"
@@ -30,13 +31,107 @@ using namespace google::protobuf::io;
 using namespace google::protobuf::compiler;
 using message_type = std::variant<std::string, int32_t, int64_t, uint32_t,
                                   uint64_t, float, double, bool>;
-using converter_type =
-    std::function<message_type(const google::protobuf::Message&)>;
+using converter_func =
+    message_type (*)(const google::protobuf::Message&,
+                     const google::protobuf::FieldDescriptor*, int);
 
 std::unordered_map<std::string, message_type> proto_map;
-google::protobuf::DynamicMessageFactory factory;
-google::protobuf::DescriptorPool pool;
-FileDescriptorProto file_desc_proto;
+
+static message_type convert_uint32(
+    const google::protobuf::Message& msg,
+    const google::protobuf::FieldDescriptor* field, int array_no) {
+    return msg.GetReflection()->GetUInt32(msg, field);
+}
+
+static message_type convert_uint64(
+    const google::protobuf::Message& msg,
+    const google::protobuf::FieldDescriptor* field, int array_no) {
+    return msg.GetReflection()->GetUInt64(msg, field);
+}
+
+static message_type convert_int32(
+    const google::protobuf::Message& msg,
+    const google::protobuf::FieldDescriptor* field, int array_no) {
+    return msg.GetReflection()->GetInt32(msg, field);
+}
+
+static message_type convert_int64(
+    const google::protobuf::Message& msg,
+    const google::protobuf::FieldDescriptor* field, int array_no) {
+    return msg.GetReflection()->GetInt64(msg, field);
+}
+
+static message_type convert_float(
+    const google::protobuf::Message& msg,
+    const google::protobuf::FieldDescriptor* field, int array_no) {
+    return msg.GetReflection()->GetFloat(msg, field);
+}
+
+static message_type convert_double(
+    const google::protobuf::Message& msg,
+    const google::protobuf::FieldDescriptor* field, int array_no) {
+    return msg.GetReflection()->GetDouble(msg, field);
+}
+
+static message_type convert_bool(const google::protobuf::Message& msg,
+                                 const google::protobuf::FieldDescriptor* field,
+                                 int array_no) {
+    return msg.GetReflection()->GetBool(msg, field);
+}
+
+static message_type convert_string(
+    const google::protobuf::Message& msg,
+    const google::protobuf::FieldDescriptor* field, int array_no) {
+    return msg.GetReflection()->GetString(msg, field);
+}
+
+static message_type convert_repeated_uint32(
+    const google::protobuf::Message& msg,
+    const google::protobuf::FieldDescriptor* field, int array_no) {
+    return msg.GetReflection()->GetRepeatedUInt32(msg, field, array_no);
+}
+
+static message_type convert_repeated_uint64(
+    const google::protobuf::Message& msg,
+    const google::protobuf::FieldDescriptor* field, int array_no) {
+    return msg.GetReflection()->GetRepeatedUInt64(msg, field, array_no);
+}
+
+static message_type convert_repeated_int32(
+    const google::protobuf::Message& msg,
+    const google::protobuf::FieldDescriptor* field, int array_no) {
+    return msg.GetReflection()->GetRepeatedInt32(msg, field, array_no);
+}
+
+static message_type convert_repeated_int64(
+    const google::protobuf::Message& msg,
+    const google::protobuf::FieldDescriptor* field, int array_no) {
+    return msg.GetReflection()->GetRepeatedInt64(msg, field, array_no);
+}
+
+static message_type convert_repeated_float(
+    const google::protobuf::Message& msg,
+    const google::protobuf::FieldDescriptor* field, int array_no) {
+    return msg.GetReflection()->GetRepeatedFloat(msg, field, array_no);
+}
+
+static message_type convert_repeated_double(
+    const google::protobuf::Message& msg,
+    const google::protobuf::FieldDescriptor* field, int array_no) {
+    return msg.GetReflection()->GetRepeatedDouble(msg, field, array_no);
+}
+
+static message_type convert_repeated_bool(
+    const google::protobuf::Message& msg,
+    const google::protobuf::FieldDescriptor* field, int array_no) {
+    return msg.GetReflection()->GetRepeatedBool(msg, field, array_no);
+}
+
+static message_type convert_repeated_string(
+    const google::protobuf::Message& msg,
+    const google::protobuf::FieldDescriptor* field, int array_no) {
+    return msg.GetReflection()->GetRepeatedString(msg, field, array_no);
+}
 
 enum class message_type_enum {
     STRING,
@@ -48,9 +143,6 @@ enum class message_type_enum {
     DOUBLE,
     BOOL
 };
-
-int global_token_no = 0;
-std::string last_token_no = "";
 
 typedef struct object {
     std::string key;
@@ -73,6 +165,8 @@ struct hash<object> {
 
 class proto_node {
    public:
+    static int global_token_no;
+    static std::string last_token_no;
     std::string token_no;
     int array_no;
     const google::protobuf::FieldDescriptor* fieldDesc;
@@ -80,9 +174,13 @@ class proto_node {
     const google::protobuf::Message* message;
     const google::protobuf::Descriptor* msgDesc;
     std::unordered_map<object, proto_node> children;
-    converter_type converter;
+    converter_func converter;
 
     proto_node() : array_no(-1), fieldDesc(nullptr), reflection(nullptr) {}
+
+    message_type convert(const google::protobuf::Message& msg) {
+        return converter(msg, fieldDesc, array_no);
+    }
 
     proto_node(const google::protobuf::Message& msg, std::vector<object> path) {
         message = &msg;
@@ -128,60 +226,28 @@ class proto_node {
             if (path[0].array_no != -1) {
                 switch (fieldDesc->cpp_type()) {
                     case FieldDescriptor::CPPTYPE_STRING:
-                        converter =
-                            [this](const google::protobuf::Message& msg) {
-                                return reflection->GetRepeatedString(
-                                    msg, fieldDesc, array_no);
-                            };
+                        converter = &convert_repeated_string;
                         break;
                     case FieldDescriptor::CPPTYPE_INT32:
-                        converter =
-                            [this](const google::protobuf::Message& msg) {
-                                return reflection->GetRepeatedInt32(
-                                    msg, fieldDesc, array_no);
-                            };
+                        converter = &convert_repeated_int32;
                         break;
                     case FieldDescriptor::CPPTYPE_INT64:
-                        converter =
-                            [this](const google::protobuf::Message& msg) {
-                                return reflection->GetRepeatedInt64(
-                                    msg, fieldDesc, array_no);
-                            };
+                        converter = &convert_repeated_int64;
                         break;
                     case FieldDescriptor::CPPTYPE_UINT32:
-                        converter =
-                            [this](const google::protobuf::Message& msg) {
-                                return reflection->GetRepeatedUInt32(
-                                    msg, fieldDesc, array_no);
-                            };
+                        converter = &convert_repeated_uint32;
                         break;
                     case FieldDescriptor::CPPTYPE_UINT64:
-                        converter =
-                            [this](const google::protobuf::Message& msg) {
-                                return reflection->GetRepeatedUInt64(
-                                    msg, fieldDesc, array_no);
-                            };
+                        converter = &convert_repeated_uint64;
                         break;
                     case FieldDescriptor::CPPTYPE_FLOAT:
-                        converter =
-                            [this](const google::protobuf::Message& msg) {
-                                return reflection->GetRepeatedFloat(
-                                    msg, fieldDesc, array_no);
-                            };
+                        converter = &convert_repeated_float;
                         break;
                     case FieldDescriptor::CPPTYPE_DOUBLE:
-                        converter =
-                            [this](const google::protobuf::Message& msg) {
-                                return reflection->GetRepeatedDouble(
-                                    msg, fieldDesc, array_no);
-                            };
+                        converter = &convert_repeated_double;
                         break;
                     case FieldDescriptor::CPPTYPE_BOOL:
-                        converter =
-                            [this](const google::protobuf::Message& msg) {
-                                return reflection->GetRepeatedBool(
-                                    msg, fieldDesc, array_no);
-                            };
+                        converter = &convert_repeated_bool;
                         break;
                     default:
                         break;
@@ -189,55 +255,28 @@ class proto_node {
             } else {
                 switch (fieldDesc->cpp_type()) {
                     case FieldDescriptor::CPPTYPE_STRING:
-                        converter =
-                            [this](const google::protobuf::Message& msg) {
-                                return reflection->GetString(msg, fieldDesc);
-                            };
+                        converter = &convert_string;
                         break;
                     case FieldDescriptor::CPPTYPE_INT32:
-                        converter =
-                            [this](const google::protobuf::Message& msg) {
-                                return reflection->GetInt32(msg, fieldDesc);
-                            };
+                        converter = &convert_int32;
                         break;
                     case FieldDescriptor::CPPTYPE_INT64:
-                        converter =
-                            [this](const google::protobuf::Message& msg) {
-                                return reflection->GetInt64(msg, fieldDesc);
-                            };
+                        converter = &convert_int64;
                         break;
                     case FieldDescriptor::CPPTYPE_UINT32:
-                        converter =
-                            [this](const google::protobuf::Message& msg) {
-                                std::cout << "control" << std::endl;
-                                message->GetReflection();
-                                std::cout << "control" << std::endl;
-                                return reflection->GetUInt32(msg, fieldDesc);
-                            };
+                        converter = &convert_uint32;
                         break;
                     case FieldDescriptor::CPPTYPE_UINT64:
-                        converter =
-                            [this](const google::protobuf::Message& msg) {
-                                return reflection->GetUInt64(msg, fieldDesc);
-                            };
+                        converter = &convert_uint64;
                         break;
                     case FieldDescriptor::CPPTYPE_FLOAT:
-                        converter =
-                            [this](const google::protobuf::Message& msg) {
-                                return reflection->GetFloat(msg, fieldDesc);
-                            };
+                        converter = &convert_float;
                         break;
                     case FieldDescriptor::CPPTYPE_DOUBLE:
-                        converter =
-                            [this](const google::protobuf::Message& msg) {
-                                return reflection->GetDouble(msg, fieldDesc);
-                            };
+                        converter = &convert_double;
                         break;
                     case FieldDescriptor::CPPTYPE_BOOL:
-                        converter =
-                            [this](const google::protobuf::Message& msg) {
-                                return reflection->GetBool(msg, fieldDesc);
-                            };
+                        converter = &convert_bool;
                         break;
                     default:
                         break;
@@ -278,15 +317,23 @@ class proto_node {
             }
         } else {
             std::cout << msg.GetTypeName() << std::endl;
-            proto_map[token_no] = converter(msg);
+            proto_map[token_no] = convert(msg);
         }
     }
 };
+
+int proto_node::global_token_no = 0;
+std::string proto_node::last_token_no = "";
 
 class proto_mapper {
    public:
     std::unordered_map<object, proto_node> children;
     const google::protobuf::Message* prototype_msg;
+    google::protobuf::DynamicMessageFactory factory;
+    google::protobuf::DescriptorPool pool;
+    FileDescriptorProto file_desc_proto;
+
+    proto_mapper() : prototype_msg(nullptr) {}
 
     proto_mapper(std::string message_def_str, std::string message_type) {
         ArrayInputStream raw_input(message_def_str.c_str(),
@@ -326,7 +373,7 @@ class proto_mapper {
         }
     }
 
-    void add(const google::protobuf::Message& msg, std::vector<object> path) {
+    void add(std::vector<object> path) {
         if (children.find(path[0]) == children.end()) {
             children[path[0]] = proto_node(*prototype_msg, path);
         } else {
@@ -352,6 +399,8 @@ class proto_mapper {
     }
 };
 
+proto_mapper global_proto_mapper;
+
 int main() {
     char text[] =
         "syntax = \"proto2\";\n"
@@ -370,17 +419,19 @@ int main() {
     std::cout << "fourth" << std::endl;
     std::vector<object> path3 = {{"VDD", -1}};
     std::cout << "fifth" << std::endl;
-    mapper.add(*mapper.prototype_msg, path1);
+    mapper.add(path1);
     mapper.children.at(path1[0]).message->GetDescriptor();
     std::cout << "sixth" << std::endl;
-    mapper.add(*mapper.prototype_msg, path2);
+    mapper.add(path2);
     std::cout << "seventh" << std::endl;
-    mapper.add(*mapper.prototype_msg, path3);
+    mapper.add(path3);
     std::cout << "eighth" << std::endl;
     mapper.prototype_msg->GetDescriptor();
     std::vector<uint8_t> buffer = {0x08, 0x02, 0x10, 0x64, 0x18, 0xF5, 0x2D};
+    std::vector<uint8_t> buffer2 = {0x08, 0x00, 0x10, 0x64, 0x18, 0xF5, 0x2D};
     std::cout << "ninth" << std::endl;
     mapper.update(buffer);
+    mapper.update(buffer2);
     std::cout << "tenth" << std::endl;
     for (auto& [key, value] : proto_map) {
         std::cout << key << " -> ";

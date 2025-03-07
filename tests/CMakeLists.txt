@@ -15,5 +15,6 @@ add_executable(
 
 target_link_libraries(reelay_tests PRIVATE reelay::reelay)
 target_link_libraries(reelay_tests PRIVATE Catch2::Catch2WithMain)
+target_link_libraries(reelay_tests PRIVATE reelay::reelay protobuf::libprotobuf)
 
 catch_discover_tests(reelay_tests)

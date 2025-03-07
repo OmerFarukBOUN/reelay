@@ -15,7 +15,7 @@ find_library(OSI_LIB libopen_simulation_interface.so PATHS /usr/local/lib/osi3)
 
 
 # Add the executable
-add_executable(zenoh_bridge deneme.cpp)
+add_executable(zenoh_bridge my_boi.cpp)
 
 find_package(Boost REQUIRED COMPONENTS json)
 
@@ -23,11 +23,11 @@ target_link_libraries(zenoh_bridge PUBLIC zenohcxx::zenohc ${CUDD_LIB} rvstd Boo
 
 add_executable(zenoh_test_sub test_sub.cpp)
 
-target_link_libraries(zenoh_test_sub PUBLIC zenohcxx::zenohc ${CUDD_LIB}) #if using zenoh-c backend
+target_link_libraries(zenoh_test_sub PUBLIC zenohcxx::zenohc ${CUDD_LIB} protobuf::libprotobuf) #if using zenoh-c backend
 
 add_executable(zenoh_test_pub test_pub.cpp)
 
-target_link_libraries(zenoh_test_pub PUBLIC zenohcxx::zenohc ${CUDD_LIB}) #if using zenoh-c backend
+target_link_libraries(zenoh_test_pub PUBLIC zenohcxx::zenohc ${CUDD_LIB} protobuf::libprotobuf) #if using zenoh-c backend
 
 add_executable(esmini_zenoh esmini_zenoh.cpp)
 

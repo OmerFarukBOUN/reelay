@@ -19,7 +19,7 @@ add_executable(zenoh_bridge my_boi.cpp)
 
 find_package(Boost REQUIRED COMPONENTS json)
 
-target_link_libraries(zenoh_bridge PUBLIC zenohcxx::zenohc ${CUDD_LIB} rvstd Boost::json Boost::boost ${OSI_LIB} protobuf::libprotobuf) #if using zenoh-c backend
+target_link_libraries(zenoh_bridge PUBLIC zenohcxx::zenohc ${CUDD_LIB} Boost::json Boost::boost ${OSI_LIB} protobuf::libprotobuf) #if using zenoh-c backend
 
 add_executable(zenoh_test_sub test_sub.cpp)
 

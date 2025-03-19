@@ -154,24 +154,25 @@ RUN mkdir zenoh-bridge
 #     && sudo cmake --install . \
 #     && cd / && rm -rf /tmp/rvstd
 
-RUN   git clone https://github.com/OmerFarukBOUN/reelay.git /zenoh-bridge \
+RUN git clone https://github.com/OmerFarukBOUN/reelay.git /zenoh-bridge \
     && cd /zenoh-bridge \
-    && sudo -E make install 
+    && sudo -E make install-zenoh \
+    && echo "A"
 
 
 
 
 
-RUN rm -rf /zenoh-bridge/apps/zenoh_bridge/build \
-    && mkdir -p /zenoh-bridge/apps/zenoh_bridge/build \
-    && cd /zenoh-bridge/apps/zenoh_bridge/build \
-    && cmake .. \
-    && cmake --build . 
-RUN cd /zenoh-bridge/apps/zenoh_bridge/build \
-    && chmod +x ./zenoh_bridge ./zenoh_test_pub \
-    && (timeout 4 ./zenoh_bridge &) \
-    && sleep 1 \
-    && (timeout 2 /zenoh-bridge/apps/zenoh_bridge/build/zenoh_test_pub &)
+# RUN rm -rf /zenoh-bridge/apps/zenoh_bridge/build \
+#     && mkdir -p /zenoh-bridge/apps/zenoh_bridge/build \
+#     && cd /zenoh-bridge/apps/zenoh_bridge/build \
+#     && cmake .. \
+#     && cmake --build . 
+# RUN cd /zenoh-bridge/apps/zenoh_bridge/build \
+#     && chmod +x ./zenoh_bridge ./zenoh_test_pub \
+#     && (timeout 4 ./zenoh_bridge &) \
+#     && sleep 1 \
+#     && (timeout 2 /zenoh-bridge/apps/zenoh_bridge/build/zenoh_test_pub &)
 
 
 

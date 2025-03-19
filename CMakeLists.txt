@@ -40,6 +40,7 @@ endif()
 option(BUILD_TESTS "Build the C++ unit tests" ON)
 option(BUILD_REELAY_APPS "Build Reelay Apps" ON)
 option(BUILD_PYTHON_BINDINGS "Build Python bindings" OFF)
+option(USE_ZENOH "Use Zenoh version" OFF)
 
 include(GNUInstallDirs)
 
@@ -52,13 +53,24 @@ find_package(Protobuf REQUIRED)
 find_library(cudd_static NAMES libcudd.a REQUIRED NO_CACHE)
 
 # reelay-core
+
+if(USE_ZENOH)
+target_include_directories(
+  reelay INTERFACE $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include/>
+                   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+  target_link_libraries(reelay INTERFACE ${cudd_static} protobuf::libprotobuf)
+  install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/ DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
+  install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/reelay/zenoh_bridge/ DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/parser")
+else()
 target_include_directories(
   reelay INTERFACE $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include/>
                    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 
-target_link_libraries(reelay INTERFACE ${cudd_static} protobuf::libprotobuf)
+target_link_libraries(reelay INTERFACE ${cudd_static})
 
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/ DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
+endif()
+
 install(
   TARGETS reelay
   EXPORT reelay-config

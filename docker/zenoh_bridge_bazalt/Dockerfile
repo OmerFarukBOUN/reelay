@@ -68,9 +68,9 @@ RUN git clone --depth 1 --branch v3.2.2 https://github.com/lemire/simdjson.git /
 #       "pybind11[global]"
 
 # Install reelay
-RUN git clone https://github.com/doganulus/reelay.git --recurse-submodules \
-    && cd reelay \
-    && sudo -E make install
+# RUN git clone https://github.com/doganulus/reelay.git --recurse-submodules \
+#     && cd reelay \
+#     && sudo -E make install
 
 # # Install zenoh
 # RUN echo "deb [trusted=yes] https://download.eclipse.org/zenoh/debian-repo/ /" | sudo tee -a /etc/apt/sources.list.d/zenoh.list > /dev/null \
@@ -154,7 +154,7 @@ RUN mkdir zenoh-bridge
 #     && sudo cmake --install . \
 #     && cd / && rm -rf /tmp/rvstd
 
-RUN git clone https://github.com/OmerFarukBOUN/reelay.git /zenoh-bridge \
+RUN   git clone https://github.com/OmerFarukBOUN/reelay.git /zenoh-bridge \
     && cd /zenoh-bridge \
     && sudo -E make install 
 

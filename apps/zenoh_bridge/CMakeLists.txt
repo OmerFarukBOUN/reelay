@@ -8,7 +8,7 @@ include_directories(/usr/local/include/osi3)
 
 find_package(zenohc) #if using zenoh-c backend
 find_package(zenohcxx)
-find_package(rvstd)
+# find_package(rvstd)
 find_package(Protobuf REQUIRED)
 find_library(CUDD_LIB libcudd.so PATHS /usr/local/lib)
 find_library(OSI_LIB libopen_simulation_interface.so PATHS /usr/local/lib/osi3)

@@ -31,4 +31,4 @@ target_link_libraries(zenoh_test_pub PUBLIC zenohcxx::zenohc ${CUDD_LIB} protobu
 
 add_executable(esmini_zenoh esmini_zenoh.cpp)
 
-target_link_libraries(esmini_zenoh PUBLIC zenohcxx::zenohc ${CUDD_LIB} rvstd Boost::json Boost::boost ${OSI_LIB} protobuf::libprotobuf) #if using zenoh-c backend
+target_link_libraries(esmini_zenoh PUBLIC zenohcxx::zenohc ${CUDD_LIB} Boost::json Boost::boost ${OSI_LIB} protobuf::libprotobuf) #if using zenoh-c backend

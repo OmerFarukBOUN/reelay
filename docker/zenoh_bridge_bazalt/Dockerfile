@@ -137,18 +137,30 @@ RUN sudo apt-get update \
 
 RUN mkdir zenoh-bridge
 
+# # Install Boost with -fPIC
+# RUN git clone -j$(nproc) --recursive --depth 1 --branch boost-1.82.0 https://github.com/boostorg/boost.git /tmp/boost \
+#     && cd /tmp/boost \
+#     && ./bootstrap.sh --prefix=/usr/local --with-libraries=json \
+#     && ./b2 -j$(nproc) cxxflags=-fPIC install \
+#     && cd / && rm -rf /tmp/boost
+
+# # Install rvstd
+# RUN git clone https://github.com/OmerFarukBOUN/rvstd.git /tmp/rvstd \
+#     && cd /tmp/rvstd \
+#     && mkdir build \
+#     && cd build \
+#     && cmake .. -DCMAKE_PREFIX_PATH=/usr/local \
+#     && cmake --build . \
+#     && sudo cmake --install . \
+#     && cd / && rm -rf /tmp/rvstd
+
 RUN git clone https://github.com/OmerFarukBOUN/reelay.git /zenoh-bridge \
     && cd /zenoh-bridge \
     && sudo -E make install 
 
-# # Install rvstd
-# RUN git clone https://github.com/OmerFarukBOUN/rvstd.git \
-#     && cd rvstd \
-#     && mkdir build \
-#     && cd build \
-#     && cmake .. \
-#     && cmake --build . \
-#     && sudo cmake --install .
+
+
+
 
 RUN rm -rf /zenoh-bridge/apps/zenoh_bridge/build \
     && mkdir -p /zenoh-bridge/apps/zenoh_bridge/build \

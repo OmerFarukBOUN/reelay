@@ -5,8 +5,8 @@
 #include <iostream>
 #include <stdio.h>
 #include <thread>
-#include "reelay/parser/proto_node.hpp"
-#include "reelay/parser/zenoh_pub.hpp"
+#include "reelay/zenoh_bridge/proto_node.hpp"
+#include "reelay/zenoh_bridge/zenoh_pub.hpp"
 
 
 using namespace std::chrono_literals;

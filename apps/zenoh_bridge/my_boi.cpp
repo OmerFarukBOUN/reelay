@@ -7,8 +7,8 @@
 #include <unordered_map>
 
 #include "reelay/monitors.hpp"
-#include "reelay/parser/proto_node.hpp"
-#include "reelay/parser/zenoh_pub.hpp"
+#include "reelay/zenoh_bridge/proto_node.hpp"
+#include "reelay/zenoh_bridge/zenoh_pub.hpp"
 #include "zenoh.hxx"
 
 using namespace std::chrono_literals;

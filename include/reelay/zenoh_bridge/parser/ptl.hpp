@@ -15,7 +15,7 @@
  #include "reelay/third_party/cpp-peglib/peglib.h"
  //
  #include "reelay/parser/ptl_grammar.hpp"
- #include "reelay/parser/proto_node.hpp"
+ #include "reelay/zenoh_bridge/proto_node.hpp"
  //
  #include "reelay/options.hpp"
  #include "reelay/settings.hpp"

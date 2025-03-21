@@ -157,7 +157,7 @@ RUN mkdir zenoh-bridge
 RUN git clone https://github.com/OmerFarukBOUN/reelay.git /zenoh-bridge \
     && cd /zenoh-bridge \
     && sudo -E make install-zenoh \
-    && echo "C"
+    && echo "E"
 
 
 

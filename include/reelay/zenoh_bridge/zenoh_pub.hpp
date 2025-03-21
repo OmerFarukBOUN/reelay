@@ -18,7 +18,7 @@
 #include "proto_node.hpp"
 #include "reelay/datafield.hpp"
 #include "reelay/monitors.hpp"
-#include "reelay/parser/proto_node.hpp"
+#include "reelay/zenoh_bridge/proto_node.hpp"
 #include "reelay/parser/ptl.hpp"
 #include "zenoh.hxx"
 

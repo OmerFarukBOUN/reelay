@@ -15,7 +15,7 @@
  #include "reelay/third_party/cpp-peglib/peglib.h"
  //
  #include "reelay/parser/ptl_grammar.hpp"
- #include "reelay/zenoh_bridge/proto_node.hpp"
+ #include "reelay/zenoh_bridge/globals.hpp"
  //
  #include "reelay/options.hpp"
  #include "reelay/settings.hpp"
@@ -293,9 +293,9 @@
  
 	 parser["URI"] = [&](const peg::SemanticValues &sv) {
 	   std::cout << "URI" << std::endl;
-	   auto path = std::vector<object>();
+	   auto path = std::vector<path_token>();
 	   for (std::size_t i = 0; i < sv.size(); i++) {
-		 path.push_back(reelay::any_cast<object>(sv[i]));
+		 path.push_back(reelay::any_cast<path_token>(sv[i]));
 	   }
 	   global_proto_mapper->add(path);
 	   return last_token_no;
@@ -303,7 +303,7 @@
  
 	 parser["Object"]  = [&](const peg::SemanticValues &sv) {
 	   std::cout << "Object" << std::endl;
-	   object obj;
+	   path_token obj;
 	   obj.key = reelay::any_cast<std::string>(sv[0]);
 	   if (sv.size() > 1) {
 		 obj.array_no = std::stoi(reelay::any_cast<std::string>(sv[1]));

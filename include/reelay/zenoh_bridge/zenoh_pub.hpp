@@ -15,10 +15,10 @@
 #include <variant>
 #include <vector>
 
-#include "proto_node.hpp"
+// #include "proto_node.hpp"
 #include "reelay/datafield.hpp"
 #include "reelay/monitors.hpp"
-#include "reelay/zenoh_bridge/proto_node.hpp"
+#include "reelay/zenoh_bridge/globals.hpp"
 #include "reelay/parser/ptl.hpp"
 #include "zenoh.hxx"
 

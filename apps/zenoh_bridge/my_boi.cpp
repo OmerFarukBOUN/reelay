@@ -7,8 +7,9 @@
 #include <unordered_map>
 
 #include "reelay/monitors.hpp"
-#include "reelay/zenoh_bridge/proto_node.hpp"
+#include "reelay/zenoh_bridge/proto_node/proto_node.hpp"
 #include "reelay/zenoh_bridge/zenoh_pub.hpp"
+#include "reelay/zenoh_bridge/globals.hpp"
 #include "zenoh.hxx"
 
 using namespace std::chrono_literals;
@@ -19,12 +20,6 @@ using time_type = int64_t;
 using input_type = std::unordered_map<std::string, message_type>;
 using output_type = reelay::json;
 using config_type = reelay::json;
-
-void data_handler(const zenoh::Sample &sample);
-void data_handler2(const zenoh::Sample &sample);
-bool generate_monitor_node(std::string pub_keyexpr, config_type pub_config,
-                           std::string sub_keyexpr, config_type sub_config,
-                           config_type monitor_config);
 
 int main() {
     std::cout << "Hello, World!" << std::endl;

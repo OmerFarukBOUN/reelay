@@ -15,7 +15,7 @@ find_library(OSI_LIB libopen_simulation_interface.so PATHS /usr/local/lib/osi3)
 
 
 # Add the executable
-add_executable(zenoh_bridge my_boi.cpp)
+add_executable(zenoh_bridge zenoh_bridge.cpp)
 
 find_package(Boost REQUIRED COMPONENTS json)
 

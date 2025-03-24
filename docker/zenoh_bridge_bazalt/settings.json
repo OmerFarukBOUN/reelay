@@ -1,0 +1,5 @@
+{
+	"monitor_pattern": "historically[0:5]{#/moving_object/0/id: 1}",
+	"pub_keyexpr": "output/1",
+	"sub_keyexpr": "esmini/gt"
+}

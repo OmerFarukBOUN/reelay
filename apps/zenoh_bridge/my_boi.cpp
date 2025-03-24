@@ -38,7 +38,8 @@ int main() {
         "}";
     std::string message_type("APIPort3");
     std::cout << "first" << std::endl;
-    global_proto_mapper = new proto_mapper(text, message_type);
+    init_protobuf(text, message_type);
+    global_proto_mapper = new proto_mapper(message_type);
     auto options =
         reelay::discrete_timed<time_type>::monitor<input_type,
                                                    output_type>::options()

@@ -121,6 +121,8 @@ RUN git clone https://github.com/OpenSimulationInterface/open-simulation-interfa
     && make \
     && sudo make install
 
+WORKDIR /
+
 # Install esmini
 RUN wget https://github.com/esmini/esmini/releases/download/v2.45.1/esmini-demo_Linux.zip \
     && unzip esmini-demo_Linux.zip \
@@ -159,20 +161,21 @@ RUN git clone https://github.com/OmerFarukBOUN/reelay.git /zenoh-bridge \
     && sudo -E make install-zenoh \
     && echo "E"
 
-
-
-
-
 RUN rm -rf /zenoh-bridge/apps/zenoh_bridge/build \
     && mkdir -p /zenoh-bridge/apps/zenoh_bridge/build \
     && cd /zenoh-bridge/apps/zenoh_bridge/build \
     && cmake .. \
     && cmake --build . 
+
 RUN cd /zenoh-bridge/apps/zenoh_bridge/build \
     && chmod +x ./zenoh_bridge ./zenoh_test_pub \
     && (timeout 4 ./zenoh_bridge &) \
     && sleep 1 \
     && (timeout 2 /zenoh-bridge/apps/zenoh_bridge/build/zenoh_test_pub &)
+
+COPY . /usr/nonroot
+
+ENTRYPOINT ["/zenoh-bridge/apps/zenoh_bridge/build/zenoh_bridge"]
 
 
 

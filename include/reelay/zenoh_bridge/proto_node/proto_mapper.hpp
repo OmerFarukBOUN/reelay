@@ -1,6 +1,7 @@
 #pragma once
 
 #include <reelay/zenoh_bridge/proto_node/proto_node.hpp>
+#include <reelay/zenoh_bridge/proto_node/proto_define.hpp>
 
 class proto_mapper {
 	public:
@@ -9,31 +10,11 @@ class proto_mapper {
    
 	 proto_mapper() : prototype_msg(nullptr) {}
    
-	 proto_mapper(std::string message_def_str, std::string message_type)
+	 proto_mapper(std::string message_type)
 	 {
-	   ArrayInputStream raw_input(message_def_str.c_str(), message_def_str.size());
-	   Tokenizer input(&raw_input, NULL);
-   
-	   Parser parser;
-	   if(!parser.Parse(&input, &file_desc_proto)) {
-		 std::cerr << "Failed to parse .proto definition:" << message_def_str;
-		 return;
-	   }
-	   if(!file_desc_proto.has_name()) {
-		 file_desc_proto.set_name(message_type);
-	   }
-	   const google::protobuf::FileDescriptor* file_desc =
-		 pool.BuildFile(file_desc_proto);
-	   if(file_desc == NULL) {
-		 std::cerr << "Cannot get file descriptor from file descriptor proto"
-				   << file_desc_proto.DebugString();
-		 return;
-	   }
-	   const google::protobuf::Descriptor* message_desc =
-		 file_desc->FindMessageTypeByName(message_type);
+	   const google::protobuf::Descriptor* message_desc = pool.FindMessageTypeByName(message_type);
 	   if(message_desc == NULL) {
-		 std::cerr << "Cannot get message descriptor of message: " << message_type
-				   << ", DebugString(): " << file_desc->DebugString();
+		 std::cerr << "Cannot get message descriptor of message: " << message_type;
 		 return;
 	   }
 	   prototype_msg =

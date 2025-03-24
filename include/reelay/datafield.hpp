@@ -109,34 +109,34 @@ struct datafield<std::unordered_map<std::string, message_type>> {
     static std::unordered_set<message_type>& falsity() {
         static std::unordered_set<message_type> f = {"0", "false", "False",
                                                      0,   false,   0.0f};
-        std::cout << "falsity" << std::endl;
+        // std::cout << "falsity" << std::endl;
         return f;
     }
 
     inline static bool contains(const input_t& container,
                                 const std::string& key) {
-        std::cout << "contains" << std::endl;
+        // std::cout << "contains" << std::endl;
         return container.find(key) != container.end();
     }
 
     inline static bool as_bool(const input_t& container,
                                const std::string& key) {
-        std::cout << "as_bool" << std::endl;
+        // std::cout << "as_bool" << std::endl;
         return falsity().find(container.at(key)) == falsity().end();
     }
 
     inline static int as_integer(const input_t& container,
                                  const std::string& key) {
-        std::cout << "as_integer" << std::endl;
+        // std::cout << "as_integer" << std::endl;
         return std::get<int>(container.at(key));
     }
 
     inline static double as_floating(const input_t& container,
                                      const std::string& key) {
-        std::cout << "as_floating" << std::endl;
-        std::cout << (container.find(key) != container.end()) << std::endl;
+        // std::cout << "as_floating" << std::endl;
+        // std::cout << (container.find(key) != container.end()) << std::endl;
         if (std::holds_alternative<uint32_t>(container.at(key))) {
-          std::cout << "AAAAAAAAAAAAAa" << std::endl;
+        //   std::cout << "AAAAAAAAAAAAAa" << std::endl;
           return static_cast<double>(std::get<uint32_t>(container.at(key)));
         } else if (std::holds_alternative<uint64_t>(container.at(key))) {
           return static_cast<double>(std::get<uint64_t>(container.at(key)));
@@ -152,14 +152,14 @@ struct datafield<std::unordered_map<std::string, message_type>> {
           throw std::runtime_error("Unknown type");
         }
         auto value = std::get<double>(container.at(key));
-        std::cout << value << std::endl;
+        // std::cout << value << std::endl;
         return value;
-        return std::get<double>(container.at(key));
+        // return std::get<double>(container.at(key));
     }
 
     inline static std::string as_string(const input_t& container,
                                         const std::string& key) {
-        std::cout << "as_string" << std::endl;
+        // std::cout << "as_string" << std::endl;
         return std::get<std::string>(container.at(key));
     }
 

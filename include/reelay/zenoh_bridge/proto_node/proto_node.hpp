@@ -93,7 +93,7 @@ class proto_node {
 
   proto_node(const google::protobuf::Message& msg, std::vector<path_token> path)
   {
-    std::cout << "constructor" << std::endl;
+    // std::cout << "constructor" << std::endl;
     message = &msg;
     this->msgDesc = message->GetDescriptor();
     fieldDesc = msgDesc->FindFieldByName(path[0].key);
@@ -119,7 +119,7 @@ class proto_node {
       if(path[0].array_no != -1) {
 
         if(children.find(path[1]) == children.end()) {
-          std::cout << "array_no != -1" << std::endl;
+          // std::cout << "array_no != -1" << std::endl;
           children[path[1]] = proto_node(*factory.GetPrototype(fieldDesc->message_type()), new_path);
         }
         else {
@@ -205,7 +205,7 @@ class proto_node {
 
   void add(const google::protobuf::Message& msg, std::vector<path_token> path)
   {
-    std::cout << "add" << std::endl;
+    // std::cout << "add" << std::endl;
     if(path.size() > 1) {
       if(array_no != -1) {
         if (children.find(path[1]) == children.end()) {
@@ -235,13 +235,13 @@ class proto_node {
 
   void update(const google::protobuf::Message& msg)
   {
-    std::cout << "update" << std::endl;
+    // std::cout << "update" << std::endl;
     message->GetReflection();
-    std::cout << "control" << std::endl;
-    std::cout << msg.GetTypeName() << std::endl;
+    // std::cout << "control" << std::endl;
+    // std::cout << msg.GetTypeName() << std::endl;
     if(children.size() > 0) {
       for(auto& child : children) {
-        std::cout << "control2" << std::endl;
+        // std::cout << "control2" << std::endl;
         // std::cout << "child:" << child.first.key << " " << child.first.array_no << std::endl;
         if(array_no != -1) {
           child.second.update(
@@ -253,9 +253,9 @@ class proto_node {
       }
     }
     else {
-      std::cout << "control3" << std::endl;
+      // std::cout << "control3" << std::endl;
       proto_map[token_no] = convert(msg);
-      std::cout << "update bitti" << std::endl;
+      // std::cout << "update bitti" << std::endl;
     }
   }
 };

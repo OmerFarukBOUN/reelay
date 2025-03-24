@@ -30,7 +30,7 @@ class proto_mapper {
    
 	 void add(std::vector<path_token> path)
 	 {
-		std::cout << "Adding: proto_mapper: " << std::endl; 
+		// std::cout << "Adding: proto_mapper: " << std::endl; 
 	   if(children.find(path[0]) == children.end()) {
 		 children[path[0]] = proto_node(*prototype_msg, path);
 	   }
@@ -42,13 +42,13 @@ class proto_mapper {
    
 	 void update(const std::vector<uint8_t>& msg)
 	 {
-	   for(uint8_t byte : msg) {
-		 // static_cast<int> converts the byte to an integer to avoid printing a
-		 // character
-		 std::cout << "0x" << std::hex << std::setw(2) << std::setfill('0')
-				   << static_cast<int>(byte) << " ";
-	   }
-	   std::cout << std::endl;
+	//    for(uint8_t byte : msg) {
+	// 	 // static_cast<int> converts the byte to an integer to avoid printing a
+	// 	 // character
+	// 	 std::cout << "0x" << std::hex << std::setw(2) << std::setfill('0')
+	// 			   << static_cast<int>(byte) << " ";
+	//    }
+	//    std::cout << std::endl;
 	   google::protobuf::Message* new_msg = prototype_msg->New();
 	   // prototype_msg->GetDescriptor();
 	   // children.at({"AppLedStateOn", -1}).message->GetDescriptor();
@@ -61,9 +61,9 @@ class proto_mapper {
 	   // std::cout << mutable_msg->DebugString() << std::endl;
 	   // std::cout << new_msg->DebugString() << std::endl;
 	   for(auto& child : children) {
-		 std::cout << "update children" << std::endl;
+		//  std::cout << "update children" << std::endl;
 		 child.second.update(*new_msg);
-		 std::cout << "update children bitti" << std::endl;
+		//  std::cout << "update children bitti" << std::endl;
 	   }
 	 }
    };

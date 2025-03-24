@@ -138,6 +138,18 @@ struct datafield<std::unordered_map<std::string, message_type>> {
         if (std::holds_alternative<uint32_t>(container.at(key))) {
           std::cout << "AAAAAAAAAAAAAa" << std::endl;
           return static_cast<double>(std::get<uint32_t>(container.at(key)));
+        } else if (std::holds_alternative<uint64_t>(container.at(key))) {
+          return static_cast<double>(std::get<uint64_t>(container.at(key)));
+        } else if (std::holds_alternative<int32_t>(container.at(key))) {
+          return static_cast<double>(std::get<int32_t>(container.at(key)));
+        } else if (std::holds_alternative<int64_t>(container.at(key))) {
+          return static_cast<double>(std::get<int64_t>(container.at(key)));
+        } else if (std::holds_alternative<float>(container.at(key))) {
+          return static_cast<double>(std::get<float>(container.at(key)));
+        } else if (std::holds_alternative<double>(container.at(key))) {
+          return std::get<double>(container.at(key));
+        } else {
+          throw std::runtime_error("Unknown type");
         }
         auto value = std::get<double>(container.at(key));
         std::cout << value << std::endl;

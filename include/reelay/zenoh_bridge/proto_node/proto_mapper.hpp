@@ -14,8 +14,11 @@ class proto_mapper {
 	 {
 	   const google::protobuf::Descriptor* message_desc = pool.FindMessageTypeByName(message_type);
 	   if(message_desc == NULL) {
-		 std::cerr << "Cannot get message descriptor of message: " << message_type;
-		 return;
+			message_desc = google::protobuf::DescriptorPool::generated_pool()->FindMessageTypeByName(message_type);
+			if (message_desc == NULL) {
+				std::cerr << "Cannot get message descriptor of message: " << message_type << std::endl;
+				return;
+			}
 	   }
 	   prototype_msg =
 		 factory.GetPrototype(message_desc);  // prototype_msg is immutable
@@ -27,6 +30,7 @@ class proto_mapper {
    
 	 void add(std::vector<path_token> path)
 	 {
+		std::cout << "Adding: proto_mapper: " << std::endl; 
 	   if(children.find(path[0]) == children.end()) {
 		 children[path[0]] = proto_node(*prototype_msg, path);
 	   }

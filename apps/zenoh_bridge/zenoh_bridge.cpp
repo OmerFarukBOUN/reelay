@@ -72,6 +72,21 @@ bool generate_monitor_node(
 
 int main()
 {
+  auto pool_ = google::protobuf::DescriptorPool::generated_pool();
+  int file_count = pool_->FindFileByName("osi_groundtruth.proto")->message_type_count();
+  for (int i = 0; i < file_count; ++i) {
+      const google::protobuf::Descriptor* descriptor = pool_->FindFileByName("osi_groundtruth.proto")->message_type(i);
+      std::cout << descriptor->full_name() << std::endl;
+  }
+  const google::protobuf::Descriptor* message_desc = pool_->FindMessageTypeByName("osi3.GroundTruth");
+  if(message_desc == NULL) {
+  std::cerr << "Cannot get message descriptor of message: " << "osi3.GroundTruth" << std::endl;
+  return 1;
+  }
+  if(!std::filesystem::exists("/home/nonroot/protobufs")) {
+    std::cerr << "Directory /home/nonroot/protobufs does not exist" << std::endl;
+    return 1;
+  }
   for(const auto& entry :
       std::filesystem::directory_iterator("/home/nonroot/protobufs")) {
     if(entry.path().extension() == ".proto") {
@@ -107,6 +122,10 @@ int main()
     settings.contains("pub_keyexpr") ? settings["pub_keyexpr"] : "output/1";
   std::string sub_keyexpr =
     settings.contains("sub_keyexpr") ? settings["sub_keyexpr"] : "esmini/gt";
+    std::cout << "pub_keyexpr: " << pub_keyexpr << std::endl;
+    std::cout << "sub_keyexpr: " << sub_keyexpr << std::endl;
+    std::cout << "monitor_pattern: " << monitor_pattern << std::endl;
+    std::cout << "message_type: " << message_type << std::endl;
   generate_monitor_node(
     pub_keyexpr,
     pub_config,
@@ -132,6 +151,7 @@ inline bool generate_monitor_node(
   auto sub_session = zenoh::Session::open(std::move(sub_config_def));
 
   // Initialize the monitor
+  std::cout << message_type << std::endl;
   global_proto_mapper = new proto_mapper(message_type);
   auto options = reelay::discrete_timed<
                    time_type>::monitor<input_type, output_type>::options()
@@ -147,7 +167,7 @@ inline bool generate_monitor_node(
   auto pub_session = zenoh::Session::open(std::move(pub_config_def));
   auto publisher = pub_session.declare_publisher(zenoh::KeyExpr(pub_keyexpr));
   publisher_pnt = &publisher;
-  auto generated_monitor = new reelay::monitor<input_type, output_type>(
+  zenoh_monitor = new reelay::monitor<input_type, output_type>(
     reelay::make_monitor(monitor_pattern, options));
   auto subscriber = sub_session.declare_subscriber(
     zenoh::KeyExpr(sub_keyexpr), &data_handler, zenoh::closures::none);

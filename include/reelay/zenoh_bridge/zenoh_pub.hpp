@@ -45,7 +45,16 @@ void data_handler(const zenoh::Sample &sample) {
                 << static_cast<int>(byte) << " ";
   }
     global_proto_mapper->update(sample.get_payload().as_vector());
+    std::cout << "bruh" << std::endl;
+    for (const auto& [key, value] : proto_map) {
+        std::cout << key << ": ";
+        std::visit([](auto&& arg) { 
+            std::cout << "(" << typeid(arg).name() << ") " << arg; 
+        }, value);
+        std::cout << std::endl;
+    }
     auto result = zenoh_monitor->update(proto_map);
+    std::cout << "bruh2" << std::endl;
     std::cout << result["value"] << std::endl;
     publisher_pnt->put(result.dump());
 }

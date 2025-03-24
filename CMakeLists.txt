@@ -59,8 +59,8 @@ target_include_directories(
   reelay INTERFACE $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include/>
                    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
   target_link_libraries(reelay INTERFACE ${cudd_static} protobuf::libprotobuf)
-  install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/ DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
   install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/reelay/zenoh_bridge/parser/ DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/reelay/parser")
+  install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/ DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
 else()
 target_include_directories(
   reelay INTERFACE $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include/>

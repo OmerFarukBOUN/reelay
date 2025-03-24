@@ -258,7 +258,7 @@ int main(int argc, char *argv[]) {
         if (retval > 0) {
             osi3::GroundTruth gt;
             gt.ParseFromArray(large_buf, receivedDataBytes);
-            std::cout << gt.DebugString() << std::endl;
+            // std::cout << gt.DebugString() << std::endl;
 
             pub.put(std::string(large_buf, receivedDataBytes));
             // std::cout << large_buf << std::endl;

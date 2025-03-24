@@ -77,23 +77,26 @@ RUN sudo apt-get update \
     libpoppler-dev libdcmtk-dev libgstreamer1.0-dev libgtk2.0-dev libcairo2-dev \
     libpoppler-glib-dev libxrandr-dev libxinerama-dev curl cmake black -y
 
-RUN mkdir zenoh-bridge
-
 RUN git clone https://github.com/OmerFarukBOUN/reelay.git /zenoh-bridge \
     && cd /zenoh-bridge \
-    && sudo -E make install-zenoh
+    && sudo -E make install-zenoh \
+    && echo "K"
 
-RUN mkdir -p /home/nonroot/protobufs
+# COPY . /home/nonroot
+
+# RUN mkdir -p /home/nonroot/protobufs
 
 RUN rm -rf /zenoh-bridge/apps/zenoh_bridge/build \
     && mkdir -p /zenoh-bridge/apps/zenoh_bridge/build \
     && cd /zenoh-bridge/apps/zenoh_bridge/build \
     && cmake .. \
-    && cmake --build . 
+    && cmake --build .
 
 COPY entrypoint.sh /esmini-demo
 
 RUN chmod +x /esmini-demo/entrypoint.sh
+
+WORKDIR /esmini-demo
 
 ENTRYPOINT [ "/esmini-demo/entrypoint.sh" ]
 

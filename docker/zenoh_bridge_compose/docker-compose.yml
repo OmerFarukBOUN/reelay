@@ -1,6 +1,14 @@
 version: '3.8'
 
 services:
+  zenoh_bridge:
+    build: ./zenoh_bridge   # Path to Dockerfile for node1
+    container_name: zenoh_bridge
+    networks:
+      - zenoh-net
+    command: ["zenohd", "--bind", "tcp/0.0.0.0:7447"]
+    ports:
+      - "7447:7447"
   esmini_zenoh:
     build: ./esmini_zenoh   # Path to Dockerfile for node2
     container_name: esmini_zenoh
@@ -10,17 +18,6 @@ services:
     command: ["zenohd", "--bind", "tcp/0.0.0.0:7447", "--peer", "tcp://zenoh_bridge:7447"]
     ports:
       - "7448:7447"
-  zenoh_bridge:
-    build: ./zenoh_bridge   # Path to Dockerfile for node1
-    container_name: zenoh_bridge
-    networks:
-      - zenoh-net
-    command: ["zenohd", "--bind", "tcp/0.0.0.0:7447"]
-    ports:
-      - "7447:7447"
-
-
-
 networks:
   zenoh-net:
     driver: bridge

@@ -1,5 +1,7 @@
 FROM ghcr.io/bounverif/bazalt:latest-devel
 
+USER root
+
 RUN git clone --depth 1 --branch v3.4.0 https://github.com/catchorg/Catch2.git /tmp/catch2 \
     && cmake -S/tmp/catch2 -B/tmp/catch2/build \
     -DBUILD_TESTING=OFF \
@@ -79,8 +81,9 @@ RUN mkdir zenoh-bridge
 
 RUN git clone https://github.com/OmerFarukBOUN/reelay.git /zenoh-bridge \
     && cd /zenoh-bridge \
-    && sudo -E make install-zenoh \
-    && echo "G"
+    && sudo -E make install-zenoh
+
+RUN mkdir -p /home/nonroot/protobufs
 
 RUN rm -rf /zenoh-bridge/apps/zenoh_bridge/build \
     && mkdir -p /zenoh-bridge/apps/zenoh_bridge/build \
@@ -88,12 +91,19 @@ RUN rm -rf /zenoh-bridge/apps/zenoh_bridge/build \
     && cmake .. \
     && cmake --build . 
 
-RUN cd /zenoh-bridge/apps/zenoh_bridge/build \
-    && chmod +x ./zenoh_bridge ./zenoh_test_pub \
-    && (timeout 4 ./zenoh_bridge &) \
-    && sleep 1 \
-    && (timeout 2 /zenoh-bridge/apps/zenoh_bridge/build/zenoh_test_pub &)
+COPY entrypoint.sh /esmini-demo
 
-COPY . /home/nonroot
+RUN chmod +x /esmini-demo/entrypoint.sh
 
-RUN mkdir -p /home/nonroot/protobufs
+ENTRYPOINT [ "/esmini-demo/entrypoint.sh" ]
+
+
+# RUN cd /zenoh-bridge/apps/zenoh_bridge/build \
+#     && chmod +x ./zenoh_bridge ./zenoh_test_pub \
+#     && (timeout 4 ./zenoh_bridge &) \
+#     && sleep 1 \
+#     && (timeout 2 /zenoh-bridge/apps/zenoh_bridge/build/zenoh_test_pub &)
+
+# COPY . /home/nonroot
+
+

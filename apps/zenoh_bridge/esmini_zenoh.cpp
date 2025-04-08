@@ -265,8 +265,8 @@ int main(int argc, char* argv[])
         receivedDataBytes += static_cast<int>(buf.datasize);
       }
     }
-    uint64_t total_time = 0;
-    int how_much = 0;
+    static uint64_t total_time = 0;
+    static int how_much = 0;
     if(retval > 0) {
       osi3::GroundTruth gt;
       gt.ParseFromArray(large_buf, receivedDataBytes);

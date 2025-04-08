@@ -16,7 +16,12 @@ using output_type = reelay::json;
 using config_type = reelay::json;
 
 void data_handler2(const zenoh::Sample &sample) {
-  std::cout << "bruh" << std::endl;
+  auto now = std::chrono::high_resolution_clock::now();
+  auto receive_timestamp = std::chrono::duration_cast<std::chrono::microseconds>(
+                               now.time_since_epoch())
+                               .count();
+  std::cout << "Receive timestamp: " << receive_timestamp << " microseconds" << std::endl;
+
   std::cout << sample.get_payload().as_string() << std::endl;
 }
 

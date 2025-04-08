@@ -131,20 +131,20 @@
  * https://sites.google.com/view/simulationscenarios
  */
 
-#include "zenoh.hxx"
 #include <fstream>
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 #include "osi_common.pb.h"
 #include "osi_object.pb.h"
 #include "osi_sensorview.pb.h"
 #include "osi_version.pb.h"
+#include "zenoh.hxx"
 #include <signal.h>
-
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
+
+#include <chrono>
 #define Sleep(x) usleep((x) * 1000)
 
 static bool quit;
@@ -162,113 +162,131 @@ typedef int SE_SOCKET;
 #define MAX_MSG_SIZE 1024000
 #define OSI_MAX_UDP_DATA_SIZE 8200
 
-void CloseGracefully(SE_SOCKET socket) {
-    if (close(socket) < 0) {
-        printf("Failed closing socket");
-    }
+void CloseGracefully(SE_SOCKET socket)
+{
+  if(close(socket) < 0) {
+    printf("Failed closing socket");
+  }
 }
 
-static void signal_handler(int s) {
-    printf("Caught signal %d - quit\n", s);
+static void signal_handler(int s)
+{
+  printf("Caught signal %d - quit\n", s);
 
-    quit = true;
+  quit = true;
 }
 
-int main(int argc, char *argv[]) {
-    (void)argc;
-    (void)argv;
-    static SE_SOCKET sock;
-    struct sockaddr_in server_addr;
-    struct sockaddr_in sender_addr;
-    static unsigned short int iPortIn =
-        OSI_OUT_PORT; // Port for incoming packages
-    static char large_buf[MAX_MSG_SIZE];
-    socklen_t sender_addr_size = sizeof(sender_addr);
+int main(int argc, char* argv[])
+{
+  (void)argc;
+  (void)argv;
+  static SE_SOCKET sock;
+  struct sockaddr_in server_addr;
+  struct sockaddr_in sender_addr;
+  static unsigned short int iPortIn =
+    OSI_OUT_PORT;  // Port for incoming packages
+  static char large_buf[MAX_MSG_SIZE];
+  socklen_t sender_addr_size = sizeof(sender_addr);
 
-    // This struct must match the sender side
-    struct {
-        int counter;
-        unsigned int datasize;
-        char data[OSI_MAX_UDP_DATA_SIZE];
-    } buf;
+  // This struct must match the sender side
+  struct {
+    int counter;
+    unsigned int datasize;
+    char data[OSI_MAX_UDP_DATA_SIZE];
+  } buf;
 
-    quit = false;
+  quit = false;
 
-    // Setup signal handler to catch Ctrl-C
-    signal(SIGINT, signal_handler);
+  // Setup signal handler to catch Ctrl-C
+  signal(SIGINT, signal_handler);
 
-    sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-    if (sock == SE_INVALID_SOCKET) {
-        printf("socket failed\n");
-        return -1;
-    }
+  sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+  if(sock == SE_INVALID_SOCKET) {
+    printf("socket failed\n");
+    return -1;
+  }
 
-    // set timer for receive operations
+  // set timer for receive operations
 
-    struct timeval tv;
-    tv.tv_sec = ES_SERV_TIMEOUT / 1000;
-    tv.tv_usec = (ES_SERV_TIMEOUT % 1000) * 1000;
-    if (setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv)) == 0) {
-        printf("socket SO_RCVTIMEO (receive timeout) not supported on this "
-               "platform\n");
-    }
+  struct timeval tv;
+  tv.tv_sec = ES_SERV_TIMEOUT / 1000;
+  tv.tv_usec = (ES_SERV_TIMEOUT % 1000) * 1000;
+  if(setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv)) == 0) {
+    printf(
+      "socket SO_RCVTIMEO (receive timeout) not supported on this "
+      "platform\n");
+  }
 
-    server_addr.sin_family = AF_INET;
-    server_addr.sin_port = htons(iPortIn);
-    server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+  server_addr.sin_family = AF_INET;
+  server_addr.sin_port = htons(iPortIn);
+  server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
 
-    if (bind(sock, reinterpret_cast<struct sockaddr *>(&server_addr),
-             sizeof(server_addr)) != 0) {
-        printf("Bind failed");
-        CloseGracefully(sock);
-        return -1;
-    }
+  if(
+    bind(
+      sock,
+      reinterpret_cast<struct sockaddr*>(&server_addr),
+      sizeof(server_addr)) != 0) {
+    printf("Bind failed");
+    CloseGracefully(sock);
+    return -1;
+  }
 
-    printf("Socket open. Waiting for OSI messages on port %d. Press Ctrl-C to "
-           "quit.\n",
-           OSI_OUT_PORT);
+  printf(
+    "Socket open. Waiting for OSI messages on port %d. Press Ctrl-C to "
+    "quit.\n",
+    OSI_OUT_PORT);
 
-    osi3::GroundTruth gt;
-    std::cout << "Server listening on port 48198..." << std::endl;
-    zenoh::Config test_pub_config = zenoh::Config::create_default();
-    auto session = zenoh::Session::open(std::move(test_pub_config));
+  osi3::GroundTruth gt;
+  std::cout << "Server listening on port 48198..." << std::endl;
+  zenoh::Config test_pub_config = zenoh::Config::create_default();
+  auto session = zenoh::Session::open(std::move(test_pub_config));
 
-    auto pub = session.declare_publisher(zenoh::KeyExpr("esmini/gt"));
+  auto pub = session.declare_publisher(zenoh::KeyExpr("esmini/gt"));
 
-    while (!quit) {
-        // Fetch and parse OSI message
-        buf.counter = 1;
-        int retval;
-        int receivedDataBytes = 0;
-        while (buf.counter > 0) {
-            retval = static_cast<int>(
-                recvfrom(sock, reinterpret_cast<char *>(&buf), sizeof(buf), 0,
-                         reinterpret_cast<struct sockaddr *>(&sender_addr),
-                         &sender_addr_size));
-            if (retval > 0) {
-                if (buf.counter == 1) {
-                    // New message
-                    receivedDataBytes = 0;
-                }
-                memcpy(&large_buf[receivedDataBytes], buf.data, buf.datasize);
-                receivedDataBytes += static_cast<int>(buf.datasize);
-            }
+  while(!quit) {
+    // Fetch and parse OSI message
+    buf.counter = 1;
+    int retval;
+    int receivedDataBytes = 0;
+    while(buf.counter > 0) {
+      retval = static_cast<int>(recvfrom(
+        sock,
+        reinterpret_cast<char*>(&buf),
+        sizeof(buf),
+        0,
+        reinterpret_cast<struct sockaddr*>(&sender_addr),
+        &sender_addr_size));
+      if(retval > 0) {
+        if(buf.counter == 1) {
+          // New message
+          receivedDataBytes = 0;
         }
-
-        if (retval > 0) {
-            osi3::GroundTruth gt;
-            gt.ParseFromArray(large_buf, receivedDataBytes);
-            // std::cout << gt.DebugString() << std::endl;
-
-            pub.put(std::string(large_buf, receivedDataBytes));
-            // std::cout << large_buf << std::endl;
-
-        } else {
-            // No incoming messages, wait for a little while before polling
-            // again
-            Sleep(10);
-        }
+        memcpy(&large_buf[receivedDataBytes], buf.data, buf.datasize);
+        receivedDataBytes += static_cast<int>(buf.datasize);
+      }
     }
 
-    return 0;
+    if(retval > 0) {
+      osi3::GroundTruth gt;
+      gt.ParseFromArray(large_buf, receivedDataBytes);
+      // std::cout << gt.DebugString() << std::endl;
+
+      auto now = std::chrono::high_resolution_clock::now();
+      auto timestamp = std::chrono::duration_cast<std::chrono::microseconds>(
+                           now.time_since_epoch())
+                           .count();
+      std::cout << "Publish timestamp: " << timestamp << " microseconds"
+                << std::endl;
+
+      pub.put(std::string(large_buf, receivedDataBytes));
+      // std::cout << large_buf << std::endl;
+    }
+    else {
+      // No incoming messages, wait for a little while before polling
+      // again
+      Sleep(10);
+    }
+  }
+
+  return 0;
 }

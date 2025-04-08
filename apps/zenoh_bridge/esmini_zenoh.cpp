@@ -131,6 +131,8 @@
  * https://sites.google.com/view/simulationscenarios
  */
 
+#include <chrono>
+#include <cstdint>
 #include <fstream>
 
 #include "osi_common.pb.h"
@@ -143,8 +145,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-
-#include <chrono>
 #define Sleep(x) usleep((x) * 1000)
 
 static bool quit;
@@ -265,7 +265,8 @@ int main(int argc, char* argv[])
         receivedDataBytes += static_cast<int>(buf.datasize);
       }
     }
-
+    uint64_t total_time = 0;
+    int how_much = 0;
     if(retval > 0) {
       osi3::GroundTruth gt;
       gt.ParseFromArray(large_buf, receivedDataBytes);
@@ -273,10 +274,12 @@ int main(int argc, char* argv[])
 
       auto now = std::chrono::high_resolution_clock::now();
       auto timestamp = std::chrono::duration_cast<std::chrono::microseconds>(
-                           now.time_since_epoch())
-                           .count();
-      std::cout << "Publish timestamp: " << timestamp << " microseconds"
-                << std::endl;
+                         now.time_since_epoch())
+                         .count();
+      total_time += (timestamp & 0xFFFFFFFF);
+      how_much++;
+      std::cout << "Publish " << how_much << " timestamp: " << total_time
+                << " microseconds" << std::endl;
 
       pub.put(std::string(large_buf, receivedDataBytes));
       // std::cout << large_buf << std::endl;

@@ -93,7 +93,8 @@ int main() {
             // Record send time and package number
             auto now = system_clock::now();
             auto send_time = duration_cast<milliseconds>(now.time_since_epoch()).count();
-            json_object.push_back({{"package_number", package_number++}, {"send_time", send_time}});
+            json_object.push_back({{"package_number", package_number}, {"send_time", send_time}});
+            package_number++;
 
             last_publish_time = steady_clock::now(); // Update last publish time
         } else {
@@ -102,7 +103,7 @@ int main() {
 
         // Check if 10 seconds have passed since the last publish
         if (duration_cast<seconds>(steady_clock::now() - last_publish_time).count() >= 10) {
-            std::ofstream file("sender.json");
+            std::ofstream file("/sender.json");
             file << json_object.dump(4); // Save JSON object to file with indentation
             file.close();
             break; // Exit the loop to end the program

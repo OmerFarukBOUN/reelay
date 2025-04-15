@@ -49,8 +49,6 @@ int main(int argc, char* argv[])
                 std::ofstream file("receiver.json");
                 file << json_data.dump(4); // Save JSON object with indentation
                 file.close();
-
-                exit(0); // Exit the program
             }
         }
     });

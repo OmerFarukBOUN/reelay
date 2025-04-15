@@ -105,7 +105,7 @@ int main() {
             std::ofstream file("sender.json");
             file << json_object.dump(4); // Save JSON object to file with indentation
             file.close();
-            break; // Exit the loop to end the program
+            // break; // Exit the loop to end the program
         }
     }
 

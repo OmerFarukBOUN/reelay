@@ -23,8 +23,8 @@ void data_handler2(const zenoh::Sample& sample)
 
 
     // Record receive time and package number
-    json_data.push_back({{"package_number", how_much}, {"receive_time", timestamp}});
-    how_much++;
+    json_data.push_back({{"package_number", how_much++}, {"receive_time", timestamp}});
+    // how_much++;
 
     std::cout << sample.get_payload().as_string() << std::endl;
 }

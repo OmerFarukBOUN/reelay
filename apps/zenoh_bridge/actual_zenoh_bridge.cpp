@@ -93,8 +93,8 @@ int main() {
             // Record send time and package number
             auto now = system_clock::now();
             auto send_time = duration_cast<milliseconds>(now.time_since_epoch()).count();
-            json_object.push_back({{"package_number", package_number}, {"send_time", send_time}});
-            package_number++;
+            json_object.push_back({{"package_number", package_number++}, {"send_time", send_time}});
+            // package_number++;
 
             last_publish_time = steady_clock::now(); // Update last publish time
         } else {

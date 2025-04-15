@@ -49,8 +49,13 @@ int main(int argc, char* argv[])
                 std::ofstream file("receiver.json");
                 file << json_data.dump(4); // Save JSON object with indentation
                 file.close();
+                break;
+                // exit(0); // Exit the program
             }
         }
+
+        while (true){}
+        
     });
 
     timeout_thread.join(); // Wait for the timeout thread to finish

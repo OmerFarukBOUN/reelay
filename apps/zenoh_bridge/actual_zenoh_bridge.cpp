@@ -1,13 +1,14 @@
-// #include <cstdint>
-// #include <fstream>
 #include <signal.h>
 #include <stdio.h>
-// #include <stdlib.h>
 #include <string.h>
-// #include <unistd.h>
 #include <arpa/inet.h>
-// #include <sys/socket.h>
 #include "zenoh.hxx"
+#include "reelay/monitors.hpp"
+#include <chrono>
+#include <fstream>
+
+using json = reelay::json;
+using namespace std::chrono;
 
 #define OSI_OUT_PORT 48198
 #define MAX_MSG_SIZE 1024000
@@ -66,6 +67,10 @@ int main() {
     struct sockaddr_in sender_addr;
     socklen_t sender_addr_size = sizeof(sender_addr);
 
+    json json_object = json::array(); // JSON array to store send time and package number
+    int package_number = 0;
+    auto last_publish_time = steady_clock::now();
+
     while (!quit) {
         buf.counter = 1;
         int receivedDataBytes = 0;
@@ -84,8 +89,23 @@ int main() {
 
         if (receivedDataBytes > 0) {
             pub.put(std::string(large_buf, receivedDataBytes));
+
+            // Record send time and package number
+            auto now = system_clock::now();
+            auto send_time = duration_cast<milliseconds>(now.time_since_epoch()).count();
+            json_object.push_back({{"package_number", package_number++}, {"send_time", send_time}});
+
+            last_publish_time = steady_clock::now(); // Update last publish time
         } else {
             usleep(10000); // Sleep for 10ms
+        }
+
+        // Check if 10 seconds have passed since the last publish
+        if (duration_cast<seconds>(steady_clock::now() - last_publish_time).count() >= 10) {
+            std::ofstream file("sender.json");
+            file << json_object.dump(4); // Save JSON object to file with indentation
+            file.close();
+            break; // Exit the loop to end the program
         }
     }
 

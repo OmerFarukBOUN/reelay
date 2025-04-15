@@ -6,8 +6,7 @@ services:
     container_name: zenoh_bridge
     networks:
       - zenoh-net
-    command: >
-      sh -c "zenohd --bind tcp/0.0.0.0:7447 --peer tcp://esmini_zenoh:7448 && tail -f /dev/null"
+    command: ["zenohd", "--bind", "tcp/0.0.0.0:7447", "--peer", "tcp://esmini_zenoh:7448"]
     ports:
       - "7447:7447"
 
@@ -16,8 +15,7 @@ services:
     container_name: esmini_zenoh
     networks:
       - zenoh-net
-    command: >
-      sh -c "zenohd --bind tcp/0.0.0.0:7448 --peer tcp://zenoh_bridge:7447 && tail -f /dev/null"
+    command: ["zenohd", "--bind", "tcp/0.0.0.0:7448", "--peer", "tcp://zenoh_bridge:7447"]
     ports:
       - "7448:7448"
 

@@ -26,7 +26,7 @@ void data_handler2(const zenoh::Sample& sample)
     json_data.push_back({{"package_number", how_much++}, {"receive_time", timestamp}});
     // how_much++;
 
-    std::cout << sample.get_payload().as_string() << std::endl;
+    // std::cout << sample.get_payload().as_string() << std::endl;
 }
 
 int main(int argc, char* argv[])
@@ -47,7 +47,7 @@ int main(int argc, char* argv[])
                 std::cout << "No input for 10 seconds, saving JSON and exiting..." << std::endl;
 
                 // Save JSON object to file
-                std::ofstream file("/receiver.json");
+                std::ofstream file("/zenoh-bridge/receiver.json");
                 file << json_data.dump(4); // Save JSON object with indentation
                 file.close();
                 break;

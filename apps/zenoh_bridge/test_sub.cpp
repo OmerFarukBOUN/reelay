@@ -9,9 +9,8 @@ using namespace std::chrono_literals;
 using json = reelay::json;
 
 std::chrono::steady_clock::time_point last_input_time;
-uint64_t total_time = 0;
-int how_much = 0;
-json json_data = json::array(); // JSON array to store receive time and package number
+std::vector<std::chrono::microseconds::rep> receive_times;
+// JSON array to store receive time and package number
 
 void data_handler2(const zenoh::Sample& sample)
 {
@@ -21,10 +20,7 @@ void data_handler2(const zenoh::Sample& sample)
                          now.time_since_epoch())
                          .count();
 
-
-    // Record receive time and package number
-    json_data.push_back({{"package_number", how_much++}, {"receive_time", timestamp}});
-    // how_much++;
+    receive_times.push_back(timestamp);
 
     // std::cout << sample.get_payload().as_string() << std::endl;
 }
@@ -45,6 +41,11 @@ int main(int argc, char* argv[])
             auto elapsed_time = std::chrono::duration_cast<std::chrono::seconds>(current_time - last_input_time).count();
             if (elapsed_time > 10) {
                 std::cout << "No input for 10 seconds, saving JSON and exiting..." << std::endl;
+                json json_data = json::array(); 
+
+                for (int i = 0; i < receive_times.size(); i++) {
+                    json_data.push_back({{"package_number", i}, {"recieve_time", receive_times[i]}});
+                }
 
                 // Save JSON object to file
                 std::ofstream file("/zenoh-bridge/receiver.json");

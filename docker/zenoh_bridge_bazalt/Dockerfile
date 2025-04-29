@@ -72,10 +72,10 @@ RUN git clone --depth 1 --branch v3.2.2 https://github.com/lemire/simdjson.git /
 #     && cd reelay \
 #     && sudo -E make install
 
-# # Install zenoh
-# RUN echo "deb [trusted=yes] https://download.eclipse.org/zenoh/debian-repo/ /" | sudo tee -a /etc/apt/sources.list.d/zenoh.list > /dev/null \
-#     && sudo apt update -y \
-#     && sudo apt install zenoh -y
+# Install zenoh
+RUN echo "deb [trusted=yes] https://download.eclipse.org/zenoh/debian-repo/ /" | sudo tee -a /etc/apt/sources.list.d/zenoh.list > /dev/null \
+    && sudo apt update -y \
+    && sudo apt install zenoh -y
 
 # Install rust
 RUN curl https://sh.rustup.rs -sSf | bash -s -- -y
@@ -139,12 +139,12 @@ RUN sudo apt-get update \
 
 RUN mkdir zenoh-bridge
 
-# # Install Boost with -fPIC
-# RUN git clone -j$(nproc) --recursive --depth 1 --branch boost-1.82.0 https://github.com/boostorg/boost.git /tmp/boost \
-#     && cd /tmp/boost \
-#     && ./bootstrap.sh --prefix=/usr/local --with-libraries=json \
-#     && ./b2 -j$(nproc) cxxflags=-fPIC install \
-#     && cd / && rm -rf /tmp/boost
+# Install Boost with -fPIC
+RUN git clone -j$(nproc) --recursive --depth 1 --branch boost-1.82.0 https://github.com/boostorg/boost.git /tmp/boost \
+    && cd /tmp/boost \
+    && ./bootstrap.sh --prefix=/usr/local --with-libraries=json \
+    && ./b2 -j$(nproc) cxxflags=-fPIC install \
+    && cd / && rm -rf /tmp/boost
 
 # # Install rvstd
 # RUN git clone https://github.com/OmerFarukBOUN/rvstd.git /tmp/rvstd \

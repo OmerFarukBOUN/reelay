@@ -42,7 +42,8 @@ RUN git clone https://github.com/OmerFarukBOUN/rvstd.git \
     && cmake --build . \
     && sudo cmake --install .
 
-RUN sudo apt-get install libprotobuf-dev protobuf-compiler libprotoc-dev libprotobuf-c-dev -y
+RUN sudo apt-get update \
+    && sudo apt-get install libprotobuf-dev protobuf-compiler libprotoc-dev libprotobuf-c-dev -y
 
 # RUN git clone https://github.com/protocolbuffers/protobuf.git \
 #     && cd protobuf \

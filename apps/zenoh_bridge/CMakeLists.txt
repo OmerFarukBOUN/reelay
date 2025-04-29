@@ -32,3 +32,7 @@ target_link_libraries(zenoh_test_pub PUBLIC zenohcxx::zenohc ${CUDD_LIB} protobu
 add_executable(esmini_zenoh actual_zenoh_bridge.cpp)
 
 target_link_libraries(esmini_zenoh PUBLIC zenohcxx::zenohc ${CUDD_LIB} Boost::json Boost::boost ${OSI_LIB} protobuf::libprotobuf) #if using zenoh-c backend
+
+add_executable(z_test z_sub_original.cpp)
+
+target_link_libraries(z_test PUBLIC zenohcxx::zenohc ${CUDD_LIB} Boost::json Boost::boost ${OSI_LIB} protobuf::libprotobuf) #if using zenoh-c backend

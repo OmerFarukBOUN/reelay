@@ -15,6 +15,10 @@ using config_type = reelay::json;
 
 int main(int argc, char *argv[]) {
     zenoh::Config test_pub_config = zenoh::Config::create_default();
+    test_pub_config.insert_json5("connect/endpoints", R"(["tcp/127.0.0.1:7447"])");
+    test_pub_config.insert_json5("listen/endpoints", R"(["tcp/0.0.0.0:7447"])");
+    
+    zenoh::try_init_log_from_env();
     auto session = zenoh::Session::open(std::move(test_pub_config));
 
     auto pub = session.declare_publisher(zenoh::KeyExpr("keyexpr/test"));

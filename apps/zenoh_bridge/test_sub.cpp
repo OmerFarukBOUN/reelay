@@ -29,7 +29,7 @@ int main(int argc, char* argv[])
 {
     zenoh::Config sub_config_def = zenoh::Config::create_default();
     sub_config_def.insert_json5("connect/endpoints", R"(["tcp/127.0.0.1:7447"])");
-    sub_config_def.insert_json5("listen/endpoints", R"(["tcp/0.0.0.0:7447"])");
+    sub_config_def.insert_json5("listen/endpoints", R"(["tcp/0.0.0.0:7448"])");
     auto sub_session = zenoh::Session::open(std::move(sub_config_def));
     std::cout << "Declaring Subscriber on 'output/**'..." << std::endl;
     auto subscriber = sub_session.declare_subscriber(

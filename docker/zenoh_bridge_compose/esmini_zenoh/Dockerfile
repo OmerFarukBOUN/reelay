@@ -90,7 +90,8 @@ RUN rm -rf /zenoh-bridge/apps/zenoh_bridge/build \
     && mkdir -p /zenoh-bridge/apps/zenoh_bridge/build \
     && cd /zenoh-bridge/apps/zenoh_bridge/build \
     && cmake .. \
-    && cmake --build .
+    && cmake --build . \
+    && echo "a"
 
 COPY entrypoint.sh /esmini-demo
 

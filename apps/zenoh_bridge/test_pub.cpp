@@ -27,7 +27,7 @@ int main(int argc, char *argv[]) {
 
     while (true) {
         printf("Sending data\n");
-        std::this_thread::sleep_for(1s);
+        std::this_thread::sleep_for(5ms);
         // pub.put(R"({"test": true})");
         for (uint8_t byte : buffer2) {
           // static_cast<int> converts the byte to an integer to avoid printing a character

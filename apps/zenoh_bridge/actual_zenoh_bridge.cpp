@@ -100,7 +100,7 @@ int main() {
 
             last_publish_time = steady_clock::now(); // Update last publish time
         } else {
-            usleep(10000); // Sleep for 10ms
+            usleep(500); // Sleep for 10ms
         }
 
         // Check if 10 seconds have passed since the last publish

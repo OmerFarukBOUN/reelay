@@ -55,6 +55,6 @@ void data_handler(const zenoh::Sample &sample) {
     // }
     auto result = zenoh_monitor->update(proto_map);
     // std::cout << "bruh2" << std::endl;
-    std::cout << result["value"] << std::endl;
+    // std::cout << result["value"] << std::endl;
     publisher_pnt->put(result.dump());
 }

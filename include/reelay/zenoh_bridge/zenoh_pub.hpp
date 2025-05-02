@@ -66,7 +66,7 @@ void data_handler(const zenoh::Sample &sample) {
 
     // Increment count and (optionally) report every N calls or at the end
     ++count;
-    if (count == 667) {
+    if (count == 300) {
         double mean_proto = total_proto_map_update.count() / double(count);
         double mean_mon   = total_monitor_update.count()  / double(count);
         std::cout << "After " << count << " calls:\n"

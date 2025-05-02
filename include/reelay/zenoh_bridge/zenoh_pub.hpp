@@ -50,6 +50,7 @@ static Duration total_proto_map_update{0};
 static Duration total_monitor_update{0};
 
 void data_handler(const zenoh::Sample &sample) {
+    std::cout << count << std::endl;
     // First update: proto_mapper
     auto t0 = Clock::now();
     global_proto_mapper->update(sample.get_payload().as_vector());

@@ -65,7 +65,7 @@ void data_handler(const zenoh::Sample &sample) {
     publisher_pnt->put(result.dump());
 
     // Increment count and (optionally) report every N calls or at the end
-    ++count;
+    count++;
     if (count == 300) {
         double mean_proto = total_proto_map_update.count() / double(count);
         double mean_mon   = total_monitor_update.count()  / double(count);

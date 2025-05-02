@@ -37,24 +37,42 @@ inline reelay::monitor<input_type, output_type> *zenoh_monitor;
 inline zenoh::Publisher *publisher_pnt;
 void data_handler(const zenoh::Sample &sample);
 
+#include <chrono>
+#include <cstdint>
+#include <iostream>
+
+using Clock = std::chrono::steady_clock;
+using Duration = std::chrono::microseconds;
+
+// Accumulators for total time and count
+static std::uint64_t count = 0;
+static Duration total_proto_map_update{0};
+static Duration total_monitor_update{0};
+
 void data_handler(const zenoh::Sample &sample) {
-    // std::cout << "bruh" << std::endl;
-//     for (uint8_t byte : sample.get_payload().as_vector()) {
-//       // static_cast<int> converts the byte to an integer to avoid printing a character
-//       std::cout << "0x" << std::hex << std::setw(2) << std::setfill('0')
-//                 << static_cast<int>(byte) << " ";
-//   }
+    // First update: proto_mapper
+    auto t0 = Clock::now();
     global_proto_mapper->update(sample.get_payload().as_vector());
-    // std::cout << "bruh" << std::endl;
-    // for (const auto& [key, value] : proto_map) {
-    //     std::cout << key << ": ";
-    //     std::visit([](auto&& arg) { 
-    //         std::cout << "(" << typeid(arg).name() << ") " << arg; 
-    //     }, value);
-    //     std::cout << std::endl;
-    // }
+    auto t1 = Clock::now();
+    total_proto_map_update += std::chrono::duration_cast<Duration>(t1 - t0);
+
+    // Second update: reelay monitor
+    auto t2 = Clock::now();
     auto result = zenoh_monitor->update(proto_map);
-    // std::cout << "bruh2" << std::endl;
-    // std::cout << result["value"] << std::endl;
+    auto t3 = Clock::now();
+    total_monitor_update += std::chrono::duration_cast<Duration>(t3 - t2);
+
     publisher_pnt->put(result.dump());
+
+    // Increment count and (optionally) report every N calls or at the end
+    ++count;
+    if (count == 667) {
+        double mean_proto = total_proto_map_update.count() / double(count);
+        double mean_mon   = total_monitor_update.count()  / double(count);
+        std::cout << "After " << count << " calls:\n"
+                  << "  – mean proto_mapper->update(): "
+                  << mean_proto << " µs\n"
+                  << "  – mean zenoh_monitor->update(): "
+                  << mean_mon << " µs\n";
+    }
 }

@@ -50,7 +50,7 @@ static Duration total_proto_map_update{0};
 static Duration total_monitor_update{0};
 
 void data_handler(const zenoh::Sample &sample) {
-    std::cout << count << std::endl;
+    // std::cout << count << std::endl;
     // First update: proto_mapper
     auto t0 = Clock::now();
     global_proto_mapper->update(sample.get_payload().as_vector());
@@ -67,13 +67,13 @@ void data_handler(const zenoh::Sample &sample) {
 
     // Increment count and (optionally) report every N calls or at the end
     count++;
-    if (count == 300) {
+    if (count == 666) {
         double mean_proto = total_proto_map_update.count() / double(count);
         double mean_mon   = total_monitor_update.count()  / double(count);
         std::cout << "After " << count << " calls:\n"
                   << "  – mean proto_mapper->update(): "
                   << mean_proto << " µs\n"
                   << "  – mean zenoh_monitor->update(): "
-                  << mean_mon << " µs\n";
+                  << mean_mon << " µs\n"; std::endl;
     }
 }

@@ -74,6 +74,6 @@ void data_handler(const zenoh::Sample &sample) {
                   << "  – mean proto_mapper->update(): "
                   << mean_proto << " µs\n"
                   << "  – mean zenoh_monitor->update(): "
-                  << mean_mon << " µs\n"; std::endl;
+                  << mean_mon << " µs\n" << std::endl;
     }
 }

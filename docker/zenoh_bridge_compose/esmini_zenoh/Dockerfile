@@ -80,7 +80,7 @@ RUN sudo apt-get update \
 RUN git clone https://github.com/OmerFarukBOUN/reelay.git /zenoh-bridge \
     && cd /zenoh-bridge \
     && sudo -E make install-zenoh \
-    && echo "j"
+    && echo "r"
 
 # COPY . /home/nonroot
 
@@ -90,8 +90,7 @@ RUN rm -rf /zenoh-bridge/apps/zenoh_bridge/build \
     && mkdir -p /zenoh-bridge/apps/zenoh_bridge/build \
     && cd /zenoh-bridge/apps/zenoh_bridge/build \
     && cmake .. \
-    && cmake --build . \
-    && echo "a"
+    && cmake --build .
 
 COPY entrypoint.sh /esmini-demo
 

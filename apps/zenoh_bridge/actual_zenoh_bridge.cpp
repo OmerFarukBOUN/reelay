@@ -54,8 +54,8 @@ int main() {
     printf("Listening on port %d. Press Ctrl-C to quit.\n", OSI_OUT_PORT);
 
     zenoh::Config config = zenoh::Config::create_default();
-    // config.insert_json5("connect/endpoints", R"(["tcp/127.0.0.1:7447"])");
-    // config.insert_json5("listen/endpoints", R"(["tcp/0.0.0.0:7449"])");
+    config.insert_json5("connect/endpoints", R"(["tcp/127.0.0.1:7447"])");
+    config.insert_json5("listen/endpoints", R"(["tcp/0.0.0.0:7449"])");
     auto session = zenoh::Session::open(std::move(config));
     auto pub = session.declare_publisher(zenoh::KeyExpr(ZENOH_TOPIC));
 

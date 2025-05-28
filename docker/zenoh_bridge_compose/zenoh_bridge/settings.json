@@ -2,12 +2,12 @@
     "monitor_pattern": "historically[0:5]{#/moving_object/0/id/value: 1}",
     "pub_keyexpr": "output/1",
     "sub_keyexpr": "esmini/gt",
-    "pub_config": {
-        "connect/endpoints": ["tcp/127.0.0.1:7448"],
-        "listen/endpoints": ["tcp/0.0.0.0:7449"]
-    },
-    "sub_config": {
-        "connect/endpoints": ["tcp/127.0.0.1:7448"],
-        "listen/endpoints": ["tcp/0.0.0.0:7447"]
-    }
+    // "pub_config": {
+    //     "connect/endpoints": ["tcp/127.0.0.1:7448"],
+    //     "listen/endpoints": ["tcp/0.0.0.0:7449"]
+    // },
+    // "sub_config": {
+    //     "connect/endpoints": ["tcp/127.0.0.1:7448"],
+    //     "listen/endpoints": ["tcp/0.0.0.0:7447"]
+    // }
 }

@@ -77,10 +77,13 @@ RUN sudo apt-get update \
     libpoppler-dev libdcmtk-dev libgstreamer1.0-dev libgtk2.0-dev libcairo2-dev \
     libpoppler-glib-dev libxrandr-dev libxinerama-dev curl cmake black -y
 
+RUN sudo apt-get update \
+    && sudo apt-get install -y python3-scipy
+
 RUN git clone https://github.com/OmerFarukBOUN/reelay.git /zenoh-bridge \
     && cd /zenoh-bridge \
     && sudo -E make install-zenoh \
-    && echo "zd"
+    && echo "ze"
 
 # COPY . /home/nonroot
 
@@ -91,9 +94,6 @@ RUN rm -rf /zenoh-bridge/apps/zenoh_bridge/build \
     && cd /zenoh-bridge/apps/zenoh_bridge/build \
     && cmake .. \
     && cmake --build .
-
-RUN sudo apt-get update \
-    && sudo apt-get install -y python3-scipy
 
 COPY entrypoint.sh /esmini-demo
 

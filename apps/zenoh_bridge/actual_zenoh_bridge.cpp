@@ -72,6 +72,7 @@ int main() {
     json json_object = json::array(); // JSON array to store send time and package number
     auto last_publish_time = steady_clock::now();
     std::vector<std::chrono::microseconds::rep> send_times;
+    uint64_t total_receivedDataBytes = 0;
 
     while (!quit) {
         buf.counter = 1;
@@ -91,6 +92,7 @@ int main() {
 
         if (receivedDataBytes > 0) {
             pub.put(std::string(large_buf, receivedDataBytes));
+            total_receivedDataBytes += receivedDataBytes;
 
             // Record send time and package number
             auto now = steady_clock::now();
@@ -108,6 +110,7 @@ int main() {
             for (int i = 0; i < send_times.size(); i++) {
                 json_object.push_back({{"package_number", i}, {"send_time", send_times[i]}});
             }
+            std::cout << total_receivedDataBytes/667 << std::endl;
             std::ofstream file("/zenoh-bridge/sender.json");
             file << json_object.dump(4); // Save JSON object to file with indentation
             file.close();

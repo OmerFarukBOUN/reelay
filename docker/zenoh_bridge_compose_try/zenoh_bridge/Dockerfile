@@ -80,26 +80,19 @@ RUN sudo apt-get update \
 RUN git clone https://github.com/OmerFarukBOUN/reelay.git /zenoh-bridge \
     && cd /zenoh-bridge \
     && sudo -E make install-zenoh \
-    && echo "y"
+    && echo "v"
 
-# COPY . /home/nonroot
+RUN echo "bruh2"
 
-# RUN mkdir -p /home/nonroot/protobufs
+COPY . /home/nonroot
+
+RUN mkdir -p /home/nonroot/protobufs
 
 RUN rm -rf /zenoh-bridge/apps/zenoh_bridge/build \
     && mkdir -p /zenoh-bridge/apps/zenoh_bridge/build \
     && cd /zenoh-bridge/apps/zenoh_bridge/build \
     && cmake .. \
-    && cmake --build .
-
-COPY entrypoint.sh /esmini-demo
-
-RUN chmod +x /esmini-demo/entrypoint.sh
-
-WORKDIR /esmini-demo
-
-ENTRYPOINT [ "/esmini-demo/entrypoint.sh" ]
-
+    && cmake --build . 
 
 # RUN cd /zenoh-bridge/apps/zenoh_bridge/build \
 #     && chmod +x ./zenoh_bridge ./zenoh_test_pub \
@@ -107,6 +100,23 @@ ENTRYPOINT [ "/esmini-demo/entrypoint.sh" ]
 #     && sleep 1 \
 #     && (timeout 2 /zenoh-bridge/apps/zenoh_bridge/build/zenoh_test_pub &)
 
-# COPY . /home/nonroot
+
+
+ENTRYPOINT ["/zenoh-bridge/apps/zenoh_bridge/build/zenoh_bridge"]
+
+
+
+# Add a container user (good practice)
+# RUN groupadd reelay -g 1000 \
+#     && useradd -ms /bin/bash reelay -g 1000 -u 1000 \
+#     && printf "reelay:reelay" | chpasswd \
+#     && printf "reelay ALL= NOPASSWD: ALL\\n" >> /etc/sudoers
+
+# USER reelay
+
+# ENV PATH "/home/reelay/.local/bin:${PATH}"
+
+# RUN python -m pip install black gcovr cmake-format
+
 
 

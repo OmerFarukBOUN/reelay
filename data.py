@@ -3,10 +3,10 @@ import math
 from scipy.stats import sem, t
 
 # Load JSON data from files
-with open("sender.json", "r") as sender_file:
+with open("/zenoh-bridge/sender.json", "r") as sender_file:
     sender_data = json.load(sender_file)
 
-with open("receiver.json", "r") as receiver_file:
+with open("/zenoh-bridge/receiver.json", "r") as receiver_file:
     receiver_data = json.load(receiver_file)
 
 # Ensure both files have the same number of packets

@@ -37,31 +37,28 @@ int main(int argc, char* argv[])
 
     last_input_time = std::chrono::steady_clock::now(); // Initialize last input time
 
-    std::thread timeout_thread([&]() {
-        while (true) {
-            std::this_thread::sleep_for(std::chrono::seconds(1));
-            auto current_time = std::chrono::steady_clock::now();
-            auto elapsed_time = std::chrono::duration_cast<std::chrono::seconds>(current_time - last_input_time).count();
-            if (elapsed_time > 10) {
-                std::cout << "No input for 10 seconds, saving JSON and exiting..." << std::endl;
-                json json_data = json::array(); 
 
-                for (int i = 0; i < receive_times.size(); i++) {
-                    json_data.push_back({{"package_number", i}, {"recieve_time", receive_times[i]}});
-                }
+    while (true) {
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+        auto current_time = std::chrono::steady_clock::now();
+        auto elapsed_time = std::chrono::duration_cast<std::chrono::seconds>(current_time - last_input_time).count();
+        if (elapsed_time > 10) {
+            std::cout << "No input for 10 seconds, saving JSON and exiting..." << std::endl;
+            json json_data = json::array(); 
 
-                // Save JSON object to file
-                std::ofstream file("/zenoh-bridge/receiver.json");
-                file << json_data.dump(4); // Save JSON object with indentation
-                file.close();
-                break;
-                // exit(0); // Exit the program
+            for (int i = 0; i < receive_times.size(); i++) {
+                json_data.push_back({{"package_number", i}, {"recieve_time", receive_times[i]}});
             }
-        }
 
-        while (true){}
+            // Save JSON object to file
+            std::ofstream file("/zenoh-bridge/receiver.json");
+            file << json_data.dump(4); // Save JSON object with indentation
+            file.close();
+            break;
+            // exit(0); // Exit the program
+        }
+    }
         
-    });
 
     timeout_thread.join(); // Wait for the timeout thread to finish
     return 0;

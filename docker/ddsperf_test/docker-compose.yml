@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  ddsperf_pub:
+    build: ./test
+    network_mode: host
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    command: ddsperf ping 1kHz size 1k
+
+
+  ddsperf_sub:
+    build: ./test
+    network_mode: host
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    command: ddsperf pong

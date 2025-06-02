@@ -1,0 +1,26 @@
+version: '3.9'
+
+services:
+  ddsperf_pub1:
+    build: ./test
+    network_mode: host
+    command: ddsperf -X -D10 ping 1kHz size 1k
+    depends_on:
+      - ddsperf_sub1
+
+  ddsperf_sub1:
+    build: ./test
+    network_mode: host
+    command: ddsperf -X -D10 pong
+
+  ddsperf_pub2:
+    build: ./test
+    network_mode: host
+    command: ddsperf -X -D10 ping 1kHz size 1k
+    depends_on:
+      - ddsperf_sub2
+
+  ddsperf_sub2:
+    build: ./test
+    network_mode: host
+    command: ddsperf -X -D10 pong

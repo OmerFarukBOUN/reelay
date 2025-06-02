@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  output_listener:
+    build: ./output_listener   # Path to Dockerfile for output_listener
+    container_name: output_listener1
+    network_mode: host
+
+  zenoh_bridge:
+    build: ./zenoh_bridge   # Path to Dockerfile for zenoh_bridge
+    container_name: zenoh_bridge1
+    network_mode: host
+
+  esmini_zenoh:
+    build: ./esmini_zenoh   # Path to Dockerfile for esmini_zenoh
+    container_name: esmini_zenoh1
+    network_mode: host

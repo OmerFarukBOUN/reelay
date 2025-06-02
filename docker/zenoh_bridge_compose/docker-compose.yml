@@ -4,23 +4,13 @@ services:
   zenoh_bridge:
     build: ./zenoh_bridge   # Path to Dockerfile for zenoh_bridge
     container_name: zenoh_bridge
-    networks:
-      - zenoh-net
-    command: >
-      sh -c "zenohd --bind tcp/0.0.0.0:7447 --peer tcp/0.0.0.0:7448 && tail -f /dev/null"
-    ports:
-      - "7447:7447"
+    network_mode: host
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
 
   esmini_zenoh:
     build: ./esmini_zenoh   # Path to Dockerfile for esmini_zenoh
     container_name: esmini_zenoh
-    networks:
-      - zenoh-net
-    command: >
-      sh -c "zenohd --bind tcp/0.0.0.0:7448 --peer tcp/0.0.0.0:7447 && tail -f /dev/null"
-    ports:
-      - "7448:7448"
-
-networks:
-  zenoh-net:
-    driver: bridge
+    network_mode: host
+    volumes:
+      - /etc/localtime:/etc/localtime:ro

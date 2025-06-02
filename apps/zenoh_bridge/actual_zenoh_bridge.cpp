@@ -27,6 +27,7 @@ void CloseGracefully(int socket) {
 void signal_handler(int) {
     quit = true;
 }
+auto now = steady_clock::now();
 
 int main() {
     signal(SIGINT, signal_handler);
@@ -105,7 +106,7 @@ int main() {
             }
 
             // Record send time and package number
-            auto now = steady_clock::now();
+            now = steady_clock::now();
             auto send_time = duration_cast<std::chrono::microseconds>(now.time_since_epoch()).count();
             send_times.push_back(send_time);
             // package_number++;

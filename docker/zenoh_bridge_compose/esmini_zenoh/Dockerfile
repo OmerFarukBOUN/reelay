@@ -92,6 +92,9 @@ RUN rm -rf /zenoh-bridge/apps/zenoh_bridge/build \
     && cmake .. \
     && cmake --build .
 
+RUN sudo apt-get update \
+    && sudo apt-get install -y python3-scipy
+
 COPY entrypoint.sh /esmini-demo
 
 RUN chmod +x /esmini-demo/entrypoint.sh

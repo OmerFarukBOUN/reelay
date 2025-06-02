@@ -27,7 +27,7 @@ using google::protobuf::FieldDescriptor;
 using google::protobuf::Message;
 
 using time_type = int64_t;
-using output_type = bool;
+using output_type = reelay::json;
 using config_type = reelay::json;
 using message_type = std::variant<std::string, int32_t, int64_t, uint32_t,
                                   uint64_t, float, double, bool>;
@@ -63,7 +63,7 @@ void data_handler(const zenoh::Sample &sample) {
     auto t3 = Clock::now();
     total_monitor_update += std::chrono::duration_cast<Duration>(t3 - t2);
 
-    publisher_pnt->put(result);
+    publisher_pnt->put(result.dump());
 
     // Increment count and (optionally) report every N calls or at the end
     count++;

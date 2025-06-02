@@ -59,7 +59,7 @@ using message_type = std::variant<
 
 using time_type = int64_t;
 using input_type = std::unordered_map<std::string, message_type>;
-using output_type = bool;
+using output_type = reelay::json;
 using config_type = reelay::json;
 
 bool generate_monitor_node(

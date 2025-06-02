@@ -93,7 +93,7 @@ int main() {
             pub.put(std::string(large_buf, receivedDataBytes));
 
             // Record send time and package number
-            auto now = system_clock::now();
+            auto now = steady_clock::now();
             auto send_time = duration_cast<std::chrono::microseconds>(now.time_since_epoch()).count();
             send_times.push_back(send_time);
             // package_number++;

@@ -14,7 +14,7 @@ std::vector<std::chrono::microseconds::rep> receive_times;
 
 void data_handler2(const zenoh::Sample& sample)
 {
-    auto now = std::chrono::high_resolution_clock::now();
+    auto now = std::chrono::steady_clock::now();
     last_input_time = std::chrono::steady_clock::now();
     auto timestamp = std::chrono::duration_cast<std::chrono::microseconds>(
                          now.time_since_epoch())

@@ -89,6 +89,7 @@ int main() {
     uint64_t max_recieved = 0;
     std::vector<std::chrono::microseconds::rep> udp_intervals; // Store intervals between packets
     auto last_receive_time = steady_clock::now(); // Track the last receive time
+    std::vector<std::chrono::microseconds::rep> publish_times; // Store publish times
 
     std::thread publisher_thread([&]() {
         while (!done) {
@@ -99,10 +100,12 @@ int main() {
                 std::string data = std::move(publish_queue.front());
                 publish_queue.pop();
                 lock.unlock();  // Unlock before publishing to reduce contention
-    
+                auto start_time = steady_clock::now();
                 pub.put(data);
-    
+                auto end_time = steady_clock::now();
                 lock.lock();  // Relock for next iteration
+                auto publish_time = duration_cast<microseconds>(end_time - start_time).count();
+                publish_times.push_back(publish_time);
             }
         }
     });
@@ -162,6 +165,10 @@ int main() {
                 auto total_intervals = std::accumulate(udp_intervals.begin(), udp_intervals.end(), 0LL);
                 auto mean_interval = total_intervals / udp_intervals.size();
                 std::cout << "Mean UDP Interval: " << mean_interval << " µs" << std::endl;
+                auto total_publish_time = std::accumulate(publish_times.begin(), publish_times.end(), 0LL);
+                auto mean_publish_time = total_publish_time / publish_times.size();
+                std::cout << "Mean publish time: " << mean_publish_time << " µs" << std::endl;
+            
             } else {
                 std::cout << "No UDP packets received." << std::endl;
             }

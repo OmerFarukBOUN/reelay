@@ -99,7 +99,7 @@ void data_handler(const zenoh::Sample &sample) {
         for (size_t i = 0; i < send_times.size(); ++i) {
             sender_json.push_back({{"package_number", static_cast<int>(i)}, {"send_time", send_times[i]}});
         }
-        std::ofstream sender_file("/zenoh-bridge/sender.json");
+        std::ofstream sender_file("/shared_data/sender.json");
         sender_file << sender_json.dump(4); // Save with indentation
         sender_file.close();
 
@@ -108,7 +108,7 @@ void data_handler(const zenoh::Sample &sample) {
         for (size_t i = 0; i < receive_times.size(); ++i) {
             receiver_json.push_back({{"package_number", static_cast<int>(i)}, {"recieve_time", receive_times[i]}});
         }
-        std::ofstream receiver_file("/zenoh-bridge/receiver.json");
+        std::ofstream receiver_file("/shared_data/receiver.json");
         receiver_file << receiver_json.dump(4); // Save with indentation
         receiver_file.close();
 

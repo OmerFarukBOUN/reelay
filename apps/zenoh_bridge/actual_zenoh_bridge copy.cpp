@@ -7,12 +7,6 @@
 #include <chrono>
 #include <fstream>
 
-#include <thread>
-#include <mutex>
-#include <queue>
-#include <condition_variable>
-
-
 using json = reelay::json;
 using namespace std::chrono;
 
@@ -23,12 +17,6 @@ using namespace std::chrono;
 #define ZENOH_TOPIC "esmini/gt"
 
 static bool quit = false;
-
-std::mutex queue_mutex;
-std::condition_variable cv;
-std::queue<std::string> publish_queue;
-bool done = false;  // To signal the thread to stop
-
 
 void CloseGracefully(int socket) {
     if (close(socket) < 0) {
@@ -90,23 +78,6 @@ int main() {
     std::vector<std::chrono::microseconds::rep> udp_intervals; // Store intervals between packets
     auto last_receive_time = steady_clock::now(); // Track the last receive time
 
-    std::thread publisher_thread([&]() {
-        while (!done) {
-            std::unique_lock<std::mutex> lock(queue_mutex);
-            cv.wait_for(lock, std::chrono::milliseconds(5), [&] { return !publish_queue.empty() || done; });
-    
-            while (!publish_queue.empty()) {
-                std::string data = std::move(publish_queue.front());
-                publish_queue.pop();
-                lock.unlock();  // Unlock before publishing to reduce contention
-    
-                pub.put(data);
-    
-                lock.lock();  // Relock for next iteration
-            }
-        }
-    });
-    
 
     while (!quit) {
         buf.counter = 1;
@@ -128,11 +99,7 @@ int main() {
         }
 
         if (receivedDataBytes > 0) {
-            {
-                std::lock_guard<std::mutex> lock(queue_mutex);
-                publish_queue.emplace(std::string(large_buf, receivedDataBytes));
-            }
-            cv.notify_one();  // Wake publisher thread
+            pub.put(std::string(large_buf, receivedDataBytes));
             total_receivedDataBytes += receivedDataBytes;
             if (receivedDataBytes > max_recieved) {
                 max_recieved = receivedDataBytes;
@@ -145,6 +112,8 @@ int main() {
             // package_number++;
 
             last_publish_time = steady_clock::now(); // Update last publish time
+        } else {
+            usleep(500); // Sleep for 10ms
         }
 
         // Check if 10 seconds have passed since the last publish
@@ -168,9 +137,7 @@ int main() {
             break; // Exit the loop to end the program
         }
     }
-    done = true;
-    cv.notify_all();  // Unblock thread if waiting
-    publisher_thread.join();  // Clean thread exit
+    
 
     CloseGracefully(sock);
     return 0;

@@ -48,6 +48,8 @@ using Duration = std::chrono::microseconds;
 static std::uint64_t count = 0;
 static Duration total_proto_map_update{0};
 static Duration total_monitor_update{0};
+static Duration total_json_dump{0};
+static Duration total_zenoh_put{0};
 
 void data_handler(const zenoh::Sample &sample) {
     // std::cout << count << std::endl;
@@ -62,18 +64,31 @@ void data_handler(const zenoh::Sample &sample) {
     auto result = zenoh_monitor->update(proto_map);
     auto t3 = Clock::now();
     total_monitor_update += std::chrono::duration_cast<Duration>(t3 - t2);
-
-    publisher_pnt->put(result.dump());
+    auto t4 = Clock::now();
+    std::string json_string = result.dump();
+    auto t5 = Clock::now();
+    total_json_dump += std::chrono::duration_cast<Duration>(t5 - t4);
+    auto t6 = Clock::now();
+    publisher_pnt->put(json_string);
+    auto t7 = Clock::now();
+    total_zenoh_put += std::chrono::duration_cast<Duration>(t7 - t6);
 
     // Increment count and (optionally) report every N calls or at the end
     count++;
     if (count == 350) {
         double mean_proto = total_proto_map_update.count() / double(count);
         double mean_mon   = total_monitor_update.count()  / double(count);
+        double mean_json  = total_json_dump.count()  / double(count);
+        double mean_zenoh = total_zenoh_put.count()  / double(count);
         std::cout << "After " << count << " calls:\n"
                   << "  – mean proto_mapper->update(): "
                   << mean_proto << " µs\n"
                   << "  – mean zenoh_monitor->update(): "
-                  << mean_mon << " µs\n" << std::endl;
+                  << mean_mon << " µs\n" 
+                  << "  – mean json dump: " 
+                  << mean_json << " µs" 
+                  << "  – mean zenoh put: " << mean_zenoh 
+                  << std::endl;
+
     }
 }

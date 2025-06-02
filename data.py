@@ -40,28 +40,28 @@ def calculate_transfer_times(sender_data_path, receiver_data_path):
     print(f"Max Transfer Time: {max_transfer_time:.2f} µs")
     print(f"95% Confidence Interval: ({confidence_interval[0]:.2f} µs, {confidence_interval[1]:.2f} µs)")
 
-    # Plot transfer times
-    print("Plotting transfer times...")
-    plt.figure(figsize=(10, 6))
-    plt.plot(transfer_times, label="Transfer Times", marker="o", linestyle="-", color="b")
-    plt.axhline(mean_transfer_time, color="r", linestyle="--", label=f"Mean: {mean_transfer_time:.2f} µs")
-    plt.fill_between(
-        range(len(transfer_times)),
-        confidence_interval[0],
-        confidence_interval[1],
-        color="r",
-        alpha=0.2,
-        label="95% Confidence Interval"
-    )
-    plt.title("Transfer Times")
-    plt.xlabel("Packet Number")
-    plt.ylabel("Transfer Time (µs)")
-    plt.legend()
-    plt.grid(True)
-    plt.tight_layout()
+    # # Plot transfer times
+    # print("Plotting transfer times...")
+    # plt.figure(figsize=(10, 6))
+    # plt.plot(transfer_times, label="Transfer Times", marker="o", linestyle="-", color="b")
+    # plt.axhline(mean_transfer_time, color="r", linestyle="--", label=f"Mean: {mean_transfer_time:.2f} µs")
+    # plt.fill_between(
+    #     range(len(transfer_times)),
+    #     confidence_interval[0],
+    #     confidence_interval[1],
+    #     color="r",
+    #     alpha=0.2,
+    #     label="95% Confidence Interval"
+    # )
+    # plt.title("Transfer Times")
+    # plt.xlabel("Packet Number")
+    # plt.ylabel("Transfer Time (µs)")
+    # plt.legend()
+    # plt.grid(True)
+    # plt.tight_layout()
 
-    # Show the plot
-    plt.show()
+    # # Show the plot
+    # plt.show()
 
 # Example usage
 calculate_transfer_times("/zenoh-bridge/sender.json", "/shared_data/receiver.json")

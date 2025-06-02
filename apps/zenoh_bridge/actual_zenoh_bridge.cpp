@@ -74,6 +74,9 @@ int main() {
     std::vector<std::chrono::microseconds::rep> send_times;
     uint64_t total_receivedDataBytes = 0;
     uint64_t max_recieved = 0;
+    std::vector<std::chrono::microseconds::rep> udp_intervals; // Store intervals between packets
+    auto last_receive_time = steady_clock::now(); // Track the last receive time
+
 
     while (!quit) {
         buf.counter = 1;
@@ -86,6 +89,9 @@ int main() {
                 if (buf.counter == 1) receivedDataBytes = 0;
                 memcpy(&large_buf[receivedDataBytes], buf.data, buf.datasize);
                 receivedDataBytes += buf.datasize;
+                auto interval = duration_cast<microseconds>(now - last_receive_time).count();
+                udp_intervals.push_back(interval);
+                last_receive_time = now; // Update the last receive time
             } else {
                 break;
             }
@@ -119,6 +125,14 @@ int main() {
             std::ofstream file("/zenoh-bridge/sender.json");
             file << json_object.dump(4); // Save JSON object to file with indentation
             file.close();
+            if (!udp_intervals.empty()) {
+                // Calculate the mean interval
+                auto total_intervals = std::accumulate(udp_intervals.begin(), udp_intervals.end(), 0LL);
+                auto mean_interval = total_intervals / udp_intervals.size();
+                std::cout << "Mean UDP Interval: " << mean_interval << " µs" << std::endl;
+            } else {
+                std::cout << "No UDP packets received." << std::endl;
+            }
             break; // Exit the loop to end the program
         }
     }

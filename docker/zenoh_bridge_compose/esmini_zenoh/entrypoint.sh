@@ -13,4 +13,6 @@ sleep 5
 
 wait &&
 
+sleep 1 
+
 python3 /zenoh-bridge/data.py

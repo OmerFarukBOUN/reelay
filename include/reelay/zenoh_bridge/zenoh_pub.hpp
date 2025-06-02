@@ -1,9 +1,58 @@
+#include <google/protobuf/descriptor.h>
+#include <google/protobuf/message.h>
+#include <google/protobuf/reflection.h>
+#include <stdio.h>
+
+#include <boost/url.hpp>
+#include <chrono>
 #include <fstream>
-#include <nlohmann/json.hpp> // Include a JSON library like nlohmann/json
+#include <iostream>
+#include <stdexcept>
+#include <string>
+#include <thread>
+#include <unordered_map>
+#include <unordered_set>
+#include <variant>
+#include <vector>
 
-using json = nlohmann::json;
+// #include "proto_node.hpp"
+#include "reelay/datafield.hpp"
+#include "reelay/monitors.hpp"
+#include "reelay/zenoh_bridge/globals.hpp"
+#include "reelay/parser/ptl.hpp"
+#include "zenoh.hxx"
+#include <fstream>
 
-// Arrays to store timestamps
+using namespace std::chrono_literals;
+using google::protobuf::FieldDescriptor;
+using google::protobuf::Message;
+
+using time_type = int64_t;
+using output_type = reelay::json;
+using config_type = reelay::json;
+using json = reelay::json;
+using message_type = std::variant<std::string, int32_t, int64_t, uint32_t,
+                                  uint64_t, float, double, bool>;
+using input_type = std::unordered_map<std::string, message_type>;
+
+inline reelay::monitor<input_type, output_type> *zenoh_monitor;
+inline zenoh::Publisher *publisher_pnt;
+void data_handler(const zenoh::Sample &sample);
+
+#include <chrono>
+#include <cstdint>
+#include <iostream>
+
+using Clock = std::chrono::steady_clock;
+using Duration = std::chrono::microseconds;
+
+// Accumulators for total time and count
+static std::uint64_t count = 0;
+static Duration total_proto_map_update{0};
+static Duration total_monitor_update{0};
+static Duration total_json_dump{0};
+static Duration total_zenoh_put{0};
+
 std::vector<std::chrono::microseconds::rep> receive_times;
 std::vector<std::chrono::microseconds::rep> send_times;
 

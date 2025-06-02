@@ -80,7 +80,7 @@ RUN sudo apt-get update \
 RUN git clone https://github.com/OmerFarukBOUN/reelay.git /zenoh-bridge \
     && cd /zenoh-bridge \
     && sudo -E make install-zenoh \
-    && echo "za"
+    && echo "zb"
 
 RUN echo "bruh2"
 

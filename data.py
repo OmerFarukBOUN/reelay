@@ -39,8 +39,8 @@ def calculate_transfer_times(sender_data_path, receiver_data_path):
     print(f"Max Transfer Time: {max_transfer_time:.2f} µs")
     print(f"95% Confidence Interval: ({confidence_interval[0]:.2f} µs, {confidence_interval[1]:.2f} µs)")
 
-calculate_transfer_times("/zenoh-bridge/sender.json", "/zenoh-bridge/receiver.json")
+# calculate_transfer_times("/zenoh-bridge/sender.json", "/zenoh-bridge/receiver.json")
 calculate_transfer_times("/zenoh-bridge/sender.json", "/shared_data/receiver.json")
-calculate_transfer_times("/shared_data/sender.json", "/zenoh-bridge/receiver.json")
-calculate_transfer_times("/shared_data/sender.json", "/shared_data/receiver.json")
+# calculate_transfer_times("/shared_data/sender.json", "/zenoh-bridge/receiver.json")
+# calculate_transfer_times("/shared_data/sender.json", "/shared_data/receiver.json")
 

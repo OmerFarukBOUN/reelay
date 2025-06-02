@@ -58,8 +58,5 @@ int main(int argc, char* argv[])
             // exit(0); // Exit the program
         }
     }
-        
-
-    timeout_thread.join(); // Wait for the timeout thread to finish
     return 0;
 }

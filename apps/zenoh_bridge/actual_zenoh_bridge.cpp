@@ -114,7 +114,6 @@ int main() {
             break; // Exit the loop to end the program
         }
     }
-    while (true){}
     
 
     CloseGracefully(sock);

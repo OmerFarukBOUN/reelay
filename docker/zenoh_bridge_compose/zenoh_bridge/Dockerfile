@@ -78,12 +78,12 @@ RUN sudo apt-get update \
     libpoppler-glib-dev libxrandr-dev libxinerama-dev curl cmake black -y
 
 RUN sudo apt-get update \
-    && sudo apt-get install -y python3-scipy
+    && sudo apt-get install -y python3-scipy python3-matplotlib
 
 RUN git clone https://github.com/OmerFarukBOUN/reelay.git /zenoh-bridge \
     && cd /zenoh-bridge \
     && sudo -E make install-zenoh \
-    && echo "zg"
+    && echo "zi"
 
 RUN echo "bruh2"
 

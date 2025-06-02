@@ -41,6 +41,7 @@ def calculate_transfer_times(sender_data_path, receiver_data_path):
     print(f"95% Confidence Interval: ({confidence_interval[0]:.2f} µs, {confidence_interval[1]:.2f} µs)")
 
     # Plot transfer times
+    print("Plotting transfer times...")
     plt.figure(figsize=(10, 6))
     plt.plot(transfer_times, label="Transfer Times", marker="o", linestyle="-", color="b")
     plt.axhline(mean_transfer_time, color="r", linestyle="--", label=f"Mean: {mean_transfer_time:.2f} µs")

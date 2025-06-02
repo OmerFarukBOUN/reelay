@@ -85,7 +85,7 @@ void data_handler(const zenoh::Sample &sample) {
     send_times.push_back(send_time);
 
     // Publish the data
-    publisher_pnt->put(json_string);
+    // publisher_pnt->put(json_string);
     auto t7 = Clock::now();
     total_zenoh_put += std::chrono::duration_cast<Duration>(t7 - t6);
 

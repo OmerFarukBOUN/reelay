@@ -85,6 +85,10 @@ RUN git clone https://github.com/OmerFarukBOUN/reelay.git /zenoh-bridge \
     && sudo -E make install-zenoh \
     && echo "K"
 
+RUN rm -rf /zenoh-bridge \
+    && git clone https://github.com/OmerFarukBOUN/reelay.git /zenoh-bridge \
+    && echo "a"
+
 # COPY . /home/nonroot
 
 # RUN mkdir -p /home/nonroot/protobufs

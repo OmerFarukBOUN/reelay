@@ -142,7 +142,7 @@ int main() {
         // }
 
         // Check if 10 seconds have passed since the last publish
-        if (duration_cast<seconds>(steady_clock::now() - last_publish_time).count() >= 10) {
+        if (duration_cast<seconds>(steady_clock::now() - last_receive_time).count() >= 10) {
             // for (int i = 0; i < send_times.size(); i++) {
             //     json_object.push_back({{"package_number", i}, {"send_time", send_times[i]}});
             // }

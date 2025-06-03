@@ -27,7 +27,7 @@ void CloseGracefully(int socket) {
 void signal_handler(int) {
     quit = true;
 }
-
+auto now = steady_clock::now();
 
 int main() {
     signal(SIGINT, signal_handler);
@@ -77,7 +77,7 @@ int main() {
     uint64_t max_recieved = 0;
     std::vector<std::chrono::microseconds::rep> udp_intervals; // Store intervals between packets
     auto last_receive_time = steady_clock::now(); // Track the last receive time
-    auto now = steady_clock::now();
+
 
     while (!quit) {
         buf.counter = 1;
@@ -90,7 +90,6 @@ int main() {
                 if (buf.counter == 1) receivedDataBytes = 0;
                 memcpy(&large_buf[receivedDataBytes], buf.data, buf.datasize);
                 receivedDataBytes += buf.datasize;
-                now = steady_clock::now();
                 auto interval = duration_cast<microseconds>(now - last_receive_time).count();
                 udp_intervals.push_back(interval);
                 last_receive_time = now; // Update the last receive time
@@ -100,17 +99,17 @@ int main() {
         }
 
         if (receivedDataBytes > 0) {
-            // pub.put(std::string(large_buf, receivedDataBytes));
-            // total_receivedDataBytes += receivedDataBytes;
-            // if (receivedDataBytes > max_recieved) {
-            //     max_recieved = receivedDataBytes;
-            // }
+            pub.put(std::string(large_buf, receivedDataBytes));
+            total_receivedDataBytes += receivedDataBytes;
+            if (receivedDataBytes > max_recieved) {
+                max_recieved = receivedDataBytes;
+            }
 
-            // // Record send time and package number
-            // now = steady_clock::now();
-            // auto send_time = duration_cast<std::chrono::microseconds>(now.time_since_epoch()).count();
-            // send_times.push_back(send_time);
-            // // package_number++;
+            // Record send time and package number
+            now = steady_clock::now();
+            auto send_time = duration_cast<std::chrono::microseconds>(now.time_since_epoch()).count();
+            send_times.push_back(send_time);
+            // package_number++;
 
             last_publish_time = steady_clock::now(); // Update last publish time
         } else {
@@ -127,7 +126,6 @@ int main() {
             std::ofstream file("/zenoh-bridge/sender.json");
             file << json_object.dump(4); // Save JSON object to file with indentation
             file.close();
-            std::cout << "JSON object saved to file." << std::endl;
             if (!udp_intervals.empty()) {
                 // Calculate the mean interval
                 auto total_intervals = std::accumulate(udp_intervals.begin(), udp_intervals.end(), 0LL);

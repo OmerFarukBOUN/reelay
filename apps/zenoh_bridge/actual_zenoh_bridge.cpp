@@ -119,6 +119,7 @@ int main() {
         if (retval <= 0) {
             usleep(1000);
         }
+        std::cout << "test" << std::endl;
         // while (buf.counter > 0) {
         //     int retval = recvfrom(sock, &buf, sizeof(buf), 0,
         //                           reinterpret_cast<struct sockaddr*>(&sender_addr), &sender_addr_size);

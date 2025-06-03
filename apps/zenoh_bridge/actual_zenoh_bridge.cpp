@@ -80,6 +80,7 @@ int main() {
     auto last_receive_time = steady_clock::now(); // Track the last receive time
     auto last_receive_time2 = steady_clock::now(); // Track the last receive time
     auto now = steady_clock::now();
+    int count = 0;
 
     while (!quit) {
         // buf.counter = 1;
@@ -101,6 +102,10 @@ int main() {
                 }
                 memcpy(&large_buf[receivedDataBytes], buf.data, buf.datasize);
                 receivedDataBytes += static_cast<int>(buf.datasize);
+                count ++;
+                if (count % 1000 == 0) {
+                    printf("Received %d packets\n", count);
+                }
                 now = steady_clock::now();
                 auto interval = duration_cast<microseconds>(now - last_receive_time).count();
                 udp_intervals.push_back(interval);
@@ -108,7 +113,7 @@ int main() {
             }
         }
         now = steady_clock::now();
-        auto interval = duration_cast<microseconds>(now - last_receive_time).count();
+        auto interval = duration_cast<microseconds>(now - last_receive_time2).count();
         udp_intervals2.push_back(interval);
         last_receive_time2 = now; // Update the last receive time
 

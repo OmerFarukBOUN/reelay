@@ -117,7 +117,7 @@ int main() {
         udp_intervals2.push_back(interval);
         last_receive_time2 = now; // Update the last receive time
         if (retval <= 0) {
-            Sleep(10);
+            usleep(1000);
         }
         // while (buf.counter > 0) {
         //     int retval = recvfrom(sock, &buf, sizeof(buf), 0,

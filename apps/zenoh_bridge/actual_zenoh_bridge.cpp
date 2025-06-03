@@ -127,6 +127,7 @@ int main() {
             std::ofstream file("/zenoh-bridge/sender.json");
             file << json_object.dump(4); // Save JSON object to file with indentation
             file.close();
+            std::cout << "JSON object saved to file." << std::endl;
             if (!udp_intervals.empty()) {
                 // Calculate the mean interval
                 auto total_intervals = std::accumulate(udp_intervals.begin(), udp_intervals.end(), 0LL);

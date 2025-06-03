@@ -76,12 +76,13 @@ int main() {
     uint64_t total_receivedDataBytes = 0;
     uint64_t max_recieved = 0;
     std::vector<std::chrono::microseconds::rep> udp_intervals; // Store intervals between packets
+    std::vector<std::chrono::microseconds::rep> udp_intervals2; // Store intervals between packets
     auto last_receive_time = steady_clock::now(); // Track the last receive time
 
 
     while (!quit) {
-        buf.counter = 1;
-        int receivedDataBytes = 0;
+        // buf.counter = 1;
+        // int receivedDataBytes = 0;
 
         buf.counter = 1;
         int retval;
@@ -104,6 +105,8 @@ int main() {
                 last_receive_time = now; // Update the last receive time
             }
         }
+        auto interval = duration_cast<microseconds>(now - last_receive_time).count();
+        udp_intervals2.push_back(interval);
 
         // while (buf.counter > 0) {
         //     int retval = recvfrom(sock, &buf, sizeof(buf), 0,
@@ -140,18 +143,26 @@ int main() {
 
         // Check if 10 seconds have passed since the last publish
         if (duration_cast<seconds>(steady_clock::now() - last_publish_time).count() >= 10) {
-            for (int i = 0; i < send_times.size(); i++) {
-                json_object.push_back({{"package_number", i}, {"send_time", send_times[i]}});
-            }
-            std::cout << total_receivedDataBytes/send_times.size() << std::endl;
-            std::cout << max_recieved << std::endl;
-            std::ofstream file("/zenoh-bridge/sender.json");
-            file << json_object.dump(4); // Save JSON object to file with indentation
-            file.close();
+            // for (int i = 0; i < send_times.size(); i++) {
+            //     json_object.push_back({{"package_number", i}, {"send_time", send_times[i]}});
+            // }
+            // std::cout << total_receivedDataBytes/send_times.size() << std::endl;
+            // std::cout << max_recieved << std::endl;
+            // std::ofstream file("/zenoh-bridge/sender.json");
+            // file << json_object.dump(4); // Save JSON object to file with indentation
+            // file.close();
             if (!udp_intervals.empty()) {
                 // Calculate the mean interval
                 auto total_intervals = std::accumulate(udp_intervals.begin(), udp_intervals.end(), 0LL);
                 auto mean_interval = total_intervals / udp_intervals.size();
+                std::cout << "Mean UDP Interval: " << mean_interval << " µs" << std::endl;
+            } else {
+                std::cout << "No UDP packets received." << std::endl;
+            }
+            if (!udp_intervals2.empty()) {
+                // Calculate the mean interval
+                auto total_intervals = std::accumulate(udp_intervals2.begin(), udp_intervals2.end(), 0LL);
+                auto mean_interval = total_intervals / udp_intervals2.size();
                 std::cout << "Mean UDP Interval: " << mean_interval << " µs" << std::endl;
             } else {
                 std::cout << "No UDP packets received." << std::endl;

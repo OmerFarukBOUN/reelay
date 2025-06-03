@@ -27,7 +27,7 @@ void CloseGracefully(int socket) {
 void signal_handler(int) {
     quit = true;
 }
-auto now = steady_clock::now();
+
 
 int main() {
     signal(SIGINT, signal_handler);
@@ -78,7 +78,8 @@ int main() {
     std::vector<std::chrono::microseconds::rep> udp_intervals; // Store intervals between packets
     std::vector<std::chrono::microseconds::rep> udp_intervals2; // Store intervals between packets
     auto last_receive_time = steady_clock::now(); // Track the last receive time
-
+    auto last_receive_time2 = steady_clock::now(); // Track the last receive time
+    auto now = steady_clock::now();
 
     while (!quit) {
         // buf.counter = 1;
@@ -100,13 +101,16 @@ int main() {
                 }
                 memcpy(&large_buf[receivedDataBytes], buf.data, buf.datasize);
                 receivedDataBytes += static_cast<int>(buf.datasize);
+                now = steady_clock::now();
                 auto interval = duration_cast<microseconds>(now - last_receive_time).count();
                 udp_intervals.push_back(interval);
                 last_receive_time = now; // Update the last receive time
             }
         }
+        now = steady_clock::now();
         auto interval = duration_cast<microseconds>(now - last_receive_time).count();
         udp_intervals2.push_back(interval);
+        last_receive_time2 = now; // Update the last receive time
 
         // while (buf.counter > 0) {
         //     int retval = recvfrom(sock, &buf, sizeof(buf), 0,

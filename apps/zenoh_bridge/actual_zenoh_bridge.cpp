@@ -7,12 +7,6 @@
 #include <chrono>
 #include <fstream>
 
-#include <thread>
-#include <mutex>
-#include <queue>
-#include <condition_variable>
-
-
 using json = reelay::json;
 using namespace std::chrono;
 
@@ -23,12 +17,6 @@ using namespace std::chrono;
 #define ZENOH_TOPIC "esmini/gt"
 
 static bool quit = false;
-
-std::mutex queue_mutex;
-std::condition_variable cv;
-std::queue<std::string> publish_queue;
-bool done = false;  // To signal the thread to stop
-
 
 void CloseGracefully(int socket) {
     if (close(socket) < 0) {
@@ -89,27 +77,7 @@ int main() {
     uint64_t max_recieved = 0;
     std::vector<std::chrono::microseconds::rep> udp_intervals; // Store intervals between packets
     auto last_receive_time = steady_clock::now(); // Track the last receive time
-    std::vector<std::chrono::microseconds::rep> publish_times; // Store publish times
 
-    std::thread publisher_thread([&]() {
-        while (!done) {
-            std::unique_lock<std::mutex> lock(queue_mutex);
-            cv.wait_for(lock, std::chrono::milliseconds(5), [&] { return !publish_queue.empty() || done; });
-    
-            while (!publish_queue.empty()) {
-                std::string data = std::move(publish_queue.front());
-                publish_queue.pop();
-                lock.unlock();  // Unlock before publishing to reduce contention
-                auto start_time = steady_clock::now();
-                pub.put(data);
-                auto end_time = steady_clock::now();
-                lock.lock();  // Relock for next iteration
-                auto publish_time = duration_cast<microseconds>(end_time - start_time).count();
-                publish_times.push_back(publish_time);
-            }
-        }
-    });
-    
 
     while (!quit) {
         buf.counter = 1;
@@ -131,11 +99,7 @@ int main() {
         }
 
         if (receivedDataBytes > 0) {
-            {
-                std::lock_guard<std::mutex> lock(queue_mutex);
-                publish_queue.emplace(std::string(large_buf, receivedDataBytes));
-            }
-            cv.notify_one();  // Wake publisher thread
+            pub.put(std::string(large_buf, receivedDataBytes));
             total_receivedDataBytes += receivedDataBytes;
             if (receivedDataBytes > max_recieved) {
                 max_recieved = receivedDataBytes;
@@ -148,6 +112,8 @@ int main() {
             // package_number++;
 
             last_publish_time = steady_clock::now(); // Update last publish time
+        } else {
+            usleep(500); // Sleep for 10ms
         }
 
         // Check if 10 seconds have passed since the last publish
@@ -165,19 +131,13 @@ int main() {
                 auto total_intervals = std::accumulate(udp_intervals.begin(), udp_intervals.end(), 0LL);
                 auto mean_interval = total_intervals / udp_intervals.size();
                 std::cout << "Mean UDP Interval: " << mean_interval << " µs" << std::endl;
-                auto total_publish_time = std::accumulate(publish_times.begin(), publish_times.end(), 0LL);
-                auto mean_publish_time = total_publish_time / publish_times.size();
-                std::cout << "Mean publish time: " << mean_publish_time << " µs" << std::endl;
-            
             } else {
                 std::cout << "No UDP packets received." << std::endl;
             }
             break; // Exit the loop to end the program
         }
     }
-    done = true;
-    cv.notify_all();  // Unblock thread if waiting
-    publisher_thread.join();  // Clean thread exit
+    
 
     CloseGracefully(sock);
     return 0;

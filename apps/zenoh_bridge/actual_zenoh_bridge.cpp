@@ -110,6 +110,8 @@ int main() {
                 auto interval = duration_cast<microseconds>(now - last_receive_time).count();
                 udp_intervals.push_back(interval);
                 last_receive_time = now; // Update the last receive time
+            } else {
+                break;
             }
         }
         now = steady_clock::now();

@@ -20,11 +20,17 @@ def calculate_transfer_times(sender_data_path, receiver_data_path):
         receiver["recieve_time"] - sender["send_time"]
         for sender, receiver in zip(sender_data, receiver_data)
     ]
+    send_times = [entry["send_time"] for entry in sender_data]
+    receive_times = [entry["recieve_time"] for entry in receiver_data]
 
     # Calculate statistics
     mean_transfer_time = sum(transfer_times) / len(transfer_times)
     min_transfer_time = min(transfer_times)
     max_transfer_time = max(transfer_times)
+    send_period = (send_times[-1] - send_times[0])/ (len(send_times) - 1) if len(send_times) > 1 else 0
+    receive_period = (receive_times[-1] - receive_times[0]) / (len(receive_times) - 1) if len(receive_times) > 1 else 0
+    print(f"Send Period: {send_period:.2f} µs")
+    print(f"Receive Period: {receive_period:.2f} µs")
 
     # Calculate 95% confidence interval
     confidence = 0.95

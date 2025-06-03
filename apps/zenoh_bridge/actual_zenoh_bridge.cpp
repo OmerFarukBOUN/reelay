@@ -83,38 +83,60 @@ int main() {
         buf.counter = 1;
         int receivedDataBytes = 0;
 
-        while (buf.counter > 0) {
-            int retval = recvfrom(sock, &buf, sizeof(buf), 0,
-                                  reinterpret_cast<struct sockaddr*>(&sender_addr), &sender_addr_size);
-            if (retval > 0) {
-                if (buf.counter == 1) receivedDataBytes = 0;
+        buf.counter = 1;
+        int retval;
+        int receivedDataBytes = 0;
+        while (buf.counter > 0)
+        {
+            retval = static_cast<int>(
+                recvfrom(sock, reinterpret_cast<char*>(&buf), sizeof(buf), 0, reinterpret_cast<struct sockaddr*>(&sender_addr), &sender_addr_size));
+            if (retval > 0)
+            {
+                if (buf.counter == 1)
+                {
+                    // New message
+                    receivedDataBytes = 0;
+                }
                 memcpy(&large_buf[receivedDataBytes], buf.data, buf.datasize);
-                receivedDataBytes += buf.datasize;
+                receivedDataBytes += static_cast<int>(buf.datasize);
                 auto interval = duration_cast<microseconds>(now - last_receive_time).count();
                 udp_intervals.push_back(interval);
                 last_receive_time = now; // Update the last receive time
-            } else {
-                break;
             }
         }
 
-        if (receivedDataBytes > 0) {
-            pub.put(std::string(large_buf, receivedDataBytes));
-            total_receivedDataBytes += receivedDataBytes;
-            if (receivedDataBytes > max_recieved) {
-                max_recieved = receivedDataBytes;
-            }
+        // while (buf.counter > 0) {
+        //     int retval = recvfrom(sock, &buf, sizeof(buf), 0,
+        //                           reinterpret_cast<struct sockaddr*>(&sender_addr), &sender_addr_size);
+        //     if (retval > 0) {
+        //         if (buf.counter == 1) receivedDataBytes = 0;
+        //         memcpy(&large_buf[receivedDataBytes], buf.data, buf.datasize);
+        //         receivedDataBytes += buf.datasize;
+        //         auto interval = duration_cast<microseconds>(now - last_receive_time).count();
+        //         udp_intervals.push_back(interval);
+        //         last_receive_time = now; // Update the last receive time
+        //     } else {
+        //         break;
+        //     }
+        // }
 
-            // Record send time and package number
-            now = steady_clock::now();
-            auto send_time = duration_cast<std::chrono::microseconds>(now.time_since_epoch()).count();
-            send_times.push_back(send_time);
-            // package_number++;
+        // if (receivedDataBytes > 0) {
+        //     pub.put(std::string(large_buf, receivedDataBytes));
+        //     total_receivedDataBytes += receivedDataBytes;
+        //     if (receivedDataBytes > max_recieved) {
+        //         max_recieved = receivedDataBytes;
+        //     }
 
-            last_publish_time = steady_clock::now(); // Update last publish time
-        } else {
-            usleep(500); // Sleep for 10ms
-        }
+        //     // Record send time and package number
+        //     now = steady_clock::now();
+        //     auto send_time = duration_cast<std::chrono::microseconds>(now.time_since_epoch()).count();
+        //     send_times.push_back(send_time);
+        //     // package_number++;
+
+        //     last_publish_time = steady_clock::now(); // Update last publish time
+        // } else {
+        //     usleep(500); // Sleep for 10ms
+        // }
 
         // Check if 10 seconds have passed since the last publish
         if (duration_cast<seconds>(steady_clock::now() - last_publish_time).count() >= 10) {

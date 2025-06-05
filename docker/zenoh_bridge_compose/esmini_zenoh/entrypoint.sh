@@ -9,7 +9,7 @@ echo "Current directory: $(pwd)"
 
 sleep 5
 
-./bin/esmini --osc ./resources/xosc/cut-in.xosc --fixed_timestep 0.05 --osi_receiver_ip &
+./bin/esmini --window 60 60 800 400 --osc ./resources/xosc/cut-in.xosc --fixed_timestep 0.05 --osi_receiver_ip &
 
 wait &&
 

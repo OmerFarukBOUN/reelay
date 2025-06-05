@@ -90,11 +90,10 @@ int main() {
                 if (buf.counter == 1) receivedDataBytes = 0;
                 memcpy(&large_buf[receivedDataBytes], buf.data, buf.datasize);
                 receivedDataBytes += buf.datasize;
+                now = steady_clock::now();
                 auto interval = duration_cast<microseconds>(now - last_receive_time).count();
                 udp_intervals.push_back(interval);
                 last_receive_time = now; // Update the last receive time
-            } else {
-                break;
             }
         }
 

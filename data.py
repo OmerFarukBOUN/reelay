@@ -13,6 +13,7 @@ def calculate_transfer_times(sender_data_path, receiver_data_path):
 
     # Ensure both files have the same number of packets
     if len(sender_data) != len(receiver_data):
+        print(f"Sender packets: {len(sender_data)}, Receiver packets: {len(receiver_data)}")
         raise ValueError("Mismatch in the number of packets between sender and receiver files.")
 
     # Calculate transfer times

@@ -99,7 +99,7 @@ int main() {
             }
         }
 
-        if (retval >0 && receivedDataBytes > 0) {
+        if ((retval >0) && (receivedDataBytes > 0)) {
             // pub.put(std::string(large_buf, receivedDataBytes));
             total_receivedDataBytes += receivedDataBytes;
             if (receivedDataBytes > max_recieved) {

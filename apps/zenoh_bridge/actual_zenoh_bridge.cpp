@@ -96,8 +96,6 @@ int main() {
                 udp_intervals.push_back(interval);
                 std::cout << interval << std::endl;
                 last_receive_time = now; // Update the last receive time
-            } else if (duration_cast<seconds>(steady_clock::now() - last_publish_time).count() >= 10) {
-                break;
             }
         }
 

@@ -91,6 +91,7 @@ int main() {
                 if (buf.counter == 1) receivedDataBytes = 0;
                 memcpy(&large_buf[receivedDataBytes], buf.data, buf.datasize);
                 receivedDataBytes += buf.datasize;
+                now = steady_clock::now();
                 auto interval = duration_cast<microseconds>(now - last_receive_time).count();
                 udp_intervals.push_back(interval);
                 last_receive_time = now; // Update the last receive time
@@ -119,6 +120,9 @@ int main() {
         if (send_times.size() == 667) {
             for (int i = 0; i < send_times.size(); i++) {
                 json_object.push_back({{"package_number", i}, {"send_time", send_times[i]}});
+            }
+            for (int i = 0; i < udp_intervals.size(); i++) {
+                std::cout << udp_intervals[i] << std::endl;
             }
             std::cout << "Total recieved gts:" << udp_intervals.size() << std::endl;
             std::cout << total_receivedDataBytes/send_times.size() << std::endl;

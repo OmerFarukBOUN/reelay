@@ -137,6 +137,22 @@ int main() {
         // // Check if 10 seconds have passed since the last publish
 
     }
+    for (int i = 0; i < send_times.size(); i++) {
+        json_object.push_back({{"package_number", i}, {"send_time", send_times[i]}});
+    }
+    std::cout << total_receivedDataBytes/send_times.size() << std::endl;
+    std::cout << max_recieved << std::endl;
+    std::ofstream file("/zenoh-bridge/sender.json");
+    file << json_object.dump(4); // Save JSON object to file with indentation
+    file.close();
+    if (!udp_intervals.empty()) {
+        // Calculate the mean interval
+        auto total_intervals = std::accumulate(udp_intervals.begin(), udp_intervals.end(), 0LL);
+        auto mean_interval = total_intervals / udp_intervals.size();
+        std::cout << "Mean UDP Interval: " << mean_interval << " µs" << std::endl;
+    } else {
+        std::cout << "No UDP packets received." << std::endl;
+    }
     
 
     CloseGracefully(sock);

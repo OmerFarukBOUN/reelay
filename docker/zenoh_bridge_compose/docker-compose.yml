@@ -18,6 +18,10 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
       - shared_data:/shared_data  # Mount shared volume
+      - /tmp/.X11-unix:/tmp/.X11-unix 
+    environment:
+      DISPLAY: ${DISPLAY}  # Pass the host's DISPLAY variable
+      QT_X11_NO_MITSHM: "1"  # Prevent shared memory issues with X11
 
 volumes:
   shared_data:

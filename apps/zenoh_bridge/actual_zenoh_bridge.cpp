@@ -94,8 +94,6 @@ int main() {
                 auto interval = duration_cast<microseconds>(now - last_receive_time).count();
                 udp_intervals.push_back(interval);
                 last_receive_time = now; // Update the last receive time
-            } else {
-                break;
             }
         }
 
@@ -118,7 +116,7 @@ int main() {
         }
 
         // Check if 10 seconds have passed since the last publish
-        if (duration_cast<seconds>(steady_clock::now() - last_publish_time).count() >= 10) {
+        if (send_times.size() == 667) {
             for (int i = 0; i < send_times.size(); i++) {
                 json_object.push_back({{"package_number", i}, {"send_time", send_times[i]}});
             }

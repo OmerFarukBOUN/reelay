@@ -132,8 +132,8 @@ int main() {
             file.close();
             if (!udp_intervals.empty()) {
                 // Calculate the mean interval
-                auto total_intervals = std::accumulate(udp_intervals.begin(), udp_intervals.end(), 0LL);
-                auto mean_interval = total_intervals / udp_intervals.size();
+                auto total_intervals = std::accumulate(udp_intervals.begin()+10, udp_intervals.end(), 0LL);
+                auto mean_interval = total_intervals / (udp_intervals.size()-10);
                 std::cout << "Mean UDP Interval: " << mean_interval << " µs" << std::endl;
             } else {
                 std::cout << "No UDP packets received." << std::endl;

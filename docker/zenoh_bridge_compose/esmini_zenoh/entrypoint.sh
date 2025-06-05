@@ -9,7 +9,7 @@ echo "Current directory: $(pwd)"
 
 sleep 5
 
-./bin/esmini --headless --osc ./resources/xosc/acc-test.xosc --fixed_timestep 0.05 --osi_receiver_ip &
+./bin/esmini --headless --osc ./resources/xosc/acc-test.xosc --fixed_timestep 0.05 --disable_stdout --osi_receiver_ip &
 
 wait &&
 

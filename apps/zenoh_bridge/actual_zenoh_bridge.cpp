@@ -82,9 +82,10 @@ int main() {
     while (!quit) {
         buf.counter = 1;
         int receivedDataBytes = 0;
+        int retval = 0;
 
         while (buf.counter > 0) {
-            int retval = recvfrom(sock, &buf, sizeof(buf), 0,
+            retval = recvfrom(sock, &buf, sizeof(buf), 0,
                                   reinterpret_cast<struct sockaddr*>(&sender_addr), &sender_addr_size);
             if (retval > 0) {
                 if (buf.counter == 1) receivedDataBytes = 0;
@@ -98,7 +99,7 @@ int main() {
             }
         }
 
-        if (receivedDataBytes > 0) {
+        if (retval >0 && receivedDataBytes > 0) {
             // pub.put(std::string(large_buf, receivedDataBytes));
             total_receivedDataBytes += receivedDataBytes;
             if (receivedDataBytes > max_recieved) {

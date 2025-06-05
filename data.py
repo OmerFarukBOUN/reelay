@@ -71,4 +71,4 @@ def calculate_transfer_times(sender_data_path, receiver_data_path):
     # plt.show()
 
 # Example usage
-# calculate_transfer_times("/zenoh-bridge/sender.json", "/shared_data/receiver.json")
+calculate_transfer_times("/zenoh-bridge/sender.json", "/shared_data/receiver.json")

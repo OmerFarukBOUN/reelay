@@ -120,6 +120,7 @@ int main() {
             for (int i = 0; i < send_times.size(); i++) {
                 json_object.push_back({{"package_number", i}, {"send_time", send_times[i]}});
             }
+            std::cout << "Total recieved gts:" << udp_intervals.size() << std::endl;
             std::cout << total_receivedDataBytes/send_times.size() << std::endl;
             std::cout << max_recieved << std::endl;
             std::ofstream file("/zenoh-bridge/sender.json");

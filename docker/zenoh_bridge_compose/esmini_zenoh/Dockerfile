@@ -87,7 +87,7 @@ RUN git clone https://github.com/OmerFarukBOUN/reelay.git /zenoh-bridge \
 
 RUN rm -rf /zenoh-bridge \
     && git clone https://github.com/OmerFarukBOUN/reelay.git /zenoh-bridge \
-    && echo "a1"
+    && echo "a3"
 
 # COPY . /home/nonroot
 

@@ -22,6 +22,7 @@ set(CMAKE_CXX_FLAGS_COVERAGE "-O0 --coverage")
 set(Protobuf_INCLUDE_DIR "/opt/bazalt/include")
 set(Protobuf_LIBRARIES "/opt/bazalt/lib/libprotobuf.so")
 set(Protobuf_LIBRARY "/opt/bazalt/lib/libprotobuf.so")
+set(Protobuf_PROTOC_EXECUTABLE "/opt/bazalt/bin/protoc")
 
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
   message(STATUS "Setting build type to 'Release' as none was specified.")

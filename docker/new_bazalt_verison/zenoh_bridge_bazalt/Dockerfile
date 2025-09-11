@@ -19,10 +19,10 @@ RUN git clone https://github.com/doganulus/cudd.git /tmp/cudd \
     && make && make install \
     && cd / && rm -rf /tmp/cudd
 
-# RUN git clone --depth 1 --branch v3.2.2 https://github.com/lemire/simdjson.git /tmp/simdjson \
-#     && cmake -S/tmp/simdjson -B/tmp/simdjson/build \
-#     && cmake --build /tmp/simdjson/build/ --target install -j$(nproc) \
-#     && rm -rf /tmp/simdjson
+RUN git clone --depth 1 --branch v3.2.2 https://github.com/lemire/simdjson.git /tmp/simdjson \
+    && cmake -S/tmp/simdjson -B/tmp/simdjson/build -DSIMDJSON_IMPLEMENTATION=westmere -DCMAKE_CXX_FLAGS="-march=native" \
+    && cmake --build /tmp/simdjson/build/ --target install -j$(nproc) \
+    && rm -rf /tmp/simdjson
 
 # # Install zenoh
 # RUN echo "deb [trusted=yes] https://download.eclipse.org/zenoh/debian-repo/ /" | sudo tee -a /etc/dnf/sources.list.d/zenoh.list > /dev/null \

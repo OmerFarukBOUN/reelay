@@ -88,11 +88,11 @@ WORKDIR /
 #     && cp -r esmini esmini-demo
 
 
-RUN dnf update \
-    && dnf install build-essential gdb ninja-build git pkg-config libgl1-mesa-dev \
-    libpthread-stubs0-dev libjpeg-dev libxml2-dev libpng-dev libtiff5-dev libgdal-dev \
-    libpoppler-dev libdcmtk-dev libgstreamer1.0-dev libgtk2.0-dev libcairo2-dev \
-    libpoppler-glib-dev libxrandr-dev libxinerama-dev curl cmake black -y
+# RUN dnf update \
+#     && dnf install build-essential gdb ninja-build git pkg-config libgl1-mesa-dev \
+#     libpthread-stubs0-dev libjpeg-dev libxml2-dev libpng-dev libtiff5-dev libgdal-dev \
+#     libpoppler-dev libdcmtk-dev libgstreamer1.0-dev libgtk2.0-dev libcairo2-dev \
+#     libpoppler-glib-dev libxrandr-dev libxinerama-dev curl cmake black -y
 
 # RUN mkdir zenoh-bridge
 
@@ -122,11 +122,11 @@ RUN git clone https://github.com/OmerFarukBOUN/reelay.git /zenoh-bridge \
 
 # RUN mkdir -p /home/nonroot/protobufs
 
-# RUN rm -rf /zenoh-bridge/apps/zenoh_bridge/build \
-#     && mkdir -p /zenoh-bridge/apps/zenoh_bridge/build \
-#     && cd /zenoh-bridge/apps/zenoh_bridge/build \
-#     && cmake .. \
-#     && cmake --build . 
+RUN rm -rf /zenoh-bridge/apps/zenoh_bridge/build \
+    && mkdir -p /zenoh-bridge/apps/zenoh_bridge/build \
+    && cd /zenoh-bridge/apps/zenoh_bridge/build \
+    && cmake .. \
+    && cmake --build . 
 
 # RUN cd /zenoh-bridge/apps/zenoh_bridge/build \
 #     && chmod +x ./zenoh_bridge ./zenoh_test_pub \

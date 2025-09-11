@@ -5,6 +5,10 @@ project(zenoh_bridge)
 
 include_directories(/usr/local/include/reelay)
 include_directories(/usr/local/include/osi3)
+set(Protobuf_INCLUDE_DIR "/opt/bazalt/include")
+set(Protobuf_LIBRARIES "/opt/bazalt/lib/libprotobuf.so")
+set(Protobuf_LIBRARY "/opt/bazalt/lib/libprotobuf.so")
+set(Protobuf_PROTOC_EXECUTABLE "/opt/bazalt/bin/protoc")
 
 find_package(zenohc) #if using zenoh-c backend
 find_package(zenohcxx)

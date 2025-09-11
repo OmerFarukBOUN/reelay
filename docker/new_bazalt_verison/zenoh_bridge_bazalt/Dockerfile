@@ -66,8 +66,8 @@ RUN git clone https://github.com/OmerFarukBOUN/esmini_new_controller.git \
 RUN mv /opt/bazalt/include_ /opt/bazalt/include/google && rm -rf /opt/bazalt/include_
 
 
-RUN dnf update \
-    && dnf install -y protobuf-devel protobuf-compiler protobuf-c-devel
+# RUN dnf update \
+#     && dnf install -y protobuf-devel protobuf-compiler protobuf-c-devel
 
 
 # # Install OSI
@@ -75,7 +75,12 @@ RUN git clone https://github.com/OpenSimulationInterface/open-simulation-interfa
     && cd open-simulation-interface \
     && mkdir build \
     && cd build \
-    && cmake .. -G"Unix Makefiles" \
+    && cmake .. \
+  -DCMAKE_PREFIX_PATH=/opt/bazalt \
+  -DProtobuf_INCLUDE_DIR=/opt/bazalt/include \
+  -DProtobuf_LIBRARY=/opt/bazalt/lib/libprotobuf.so \
+  -DProtobuf_PROTOC_EXECUTABLE=/opt/bazalt/bin/protoc \
+  -G"Unix Makefiles" \
     && make \
     && make install
 

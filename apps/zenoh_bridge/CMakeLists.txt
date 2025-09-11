@@ -18,7 +18,8 @@ set(Protobuf_PROTOC_EXECUTABLE "/usr/bin/protoc")
 find_package(zenohc) #if using zenoh-c backend
 find_package(zenohcxx)
 # find_package(rvstd)
-find_package(Protobuf REQUIRED)
+
+find_package(Protobuf REQUIRED HINTS "/usr/include/google" "/usr/lib")
 find_library(CUDD_LIB libcudd.so PATHS /usr/local/lib)
 find_library(OSI_LIB libopen_simulation_interface.so PATHS /usr/local/lib/osi3)
 

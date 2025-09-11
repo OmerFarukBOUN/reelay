@@ -52,7 +52,7 @@ RUN git clone https://github.com/OmerFarukBOUN/zenoh-cpp.git \
     && cmake .. -DCMAKE_INSTALL_PREFIX=/opt/bazalt \
     && cmake --install .
 
-RUN dnf install libXrandr-devel libXinerama-devel fontconfig-devel -y
+RUN dnf install libXrandr-devel libXinerama-devel fontconfig-devel neovim mesa-dri-drivers mesa-libGL mesa-libGLU -y
 
 RUN mkdir -p /opt/bazalt/include_/google && mv /opt/bazalt/include/google /opt/bazalt/include_/google
 
@@ -60,8 +60,8 @@ RUN git clone https://github.com/OmerFarukBOUN/esmini_new_controller.git \
     && cd esmini_new_controller \
     && mkdir build \
     && cd build \
-    && cmake .. 
-    # && cmake --build . --config Release --target install
+    && cmake .. \
+    && cmake --build . --config Release --target install
 
 # RUN mv /opt/bazalt/include_/google /opt/bazalt/include/google && rm -rf /opt/bazalt/include_
 
@@ -88,11 +88,11 @@ WORKDIR /
 #     && cp -r esmini esmini-demo
 
 
-# RUN sudo dnf update \
-#     && sudo dnf install build-essential gdb ninja-build git pkg-config libgl1-mesa-dev \
-#     libpthread-stubs0-dev libjpeg-dev libxml2-dev libpng-dev libtiff5-dev libgdal-dev \
-#     libpoppler-dev libdcmtk-dev libgstreamer1.0-dev libgtk2.0-dev libcairo2-dev \
-#     libpoppler-glib-dev libxrandr-dev libxinerama-dev curl cmake black -y
+RUN dnf update \
+    && dnf install build-essential gdb ninja-build git pkg-config libgl1-mesa-dev \
+    libpthread-stubs0-dev libjpeg-dev libxml2-dev libpng-dev libtiff5-dev libgdal-dev \
+    libpoppler-dev libdcmtk-dev libgstreamer1.0-dev libgtk2.0-dev libcairo2-dev \
+    libpoppler-glib-dev libxrandr-dev libxinerama-dev curl cmake black -y
 
 # RUN mkdir zenoh-bridge
 
@@ -113,10 +113,10 @@ WORKDIR /
 #     && sudo cmake --install . \
 #     && cd / && rm -rf /tmp/rvstd
 
-# RUN git clone https://github.com/OmerFarukBOUN/reelay.git /zenoh-bridge \
-#     && cd /zenoh-bridge \
-#     && sudo -E make install-zenoh \
-#     && echo "I"
+RUN git clone https://github.com/OmerFarukBOUN/reelay.git /zenoh-bridge \
+    && cd /zenoh-bridge \
+    && make install-zenoh \
+    && echo "I"
 
 # COPY . /home/nonroot
 

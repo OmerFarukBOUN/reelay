@@ -21,7 +21,7 @@ int main(int argc, char *argv[]) {
     zenoh::try_init_log_from_env();
     auto session = zenoh::Session::open(std::move(test_pub_config));
 
-    auto pub = session.declare_publisher(zenoh::KeyExpr("keyexpr/test"));
+    auto pub = session.declare_publisher(zenoh::KeyExpr("esmini/in/0"));
     std::vector<uint8_t> buffer2 = {0x08, 0x00, 0x10, 0x64, 0x18, 0xF5, 0x2D};
 
 

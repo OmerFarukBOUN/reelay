@@ -76,7 +76,6 @@ int main()
   int file_count = pool_->FindFileByName("osi_groundtruth.proto")->message_type_count();
   for (int i = 0; i < file_count; ++i) {
       const google::protobuf::Descriptor* descriptor = pool_->FindFileByName("osi_groundtruth.proto")->message_type(i);
-      std::cout << descriptor->full_name() << std::endl;
   }
   const google::protobuf::Descriptor* message_desc = pool_->FindMessageTypeByName("osi3.GroundTruth");
   if(message_desc == NULL) {

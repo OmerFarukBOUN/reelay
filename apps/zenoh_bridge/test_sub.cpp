@@ -21,6 +21,7 @@ void data_handler2(const zenoh::Sample& sample)
                          .count();
 
     receive_times.push_back(timestamp);
+    std::cout << "Received data: " << sample.get_payload().as_string() << std::endl;
 
     // std::cout << sample.get_payload().as_string() << std::endl;
 }

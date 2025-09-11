@@ -37,6 +37,6 @@ int main(int argc, char *argv[]) {
     //                 << static_cast<int>(byte) << " ";
     //   }
         pub.put(data.SerializeAsString());
-        std::cout << "bruh" << std::endl;
+        std::cout << "Sent control data." << std::endl;
       }
 }

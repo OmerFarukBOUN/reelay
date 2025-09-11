@@ -58,6 +58,7 @@ std::vector<std::chrono::microseconds::rep> send_times;
 
 void data_handler(const zenoh::Sample &sample) {
     // Record the time when data is received
+    std::cout << "Data came" << std::endl;
     auto t0 = Clock::now();
     auto receive_time = std::chrono::duration_cast<Duration>(t0.time_since_epoch()).count();
     receive_times.push_back(receive_time);
@@ -85,7 +86,7 @@ void data_handler(const zenoh::Sample &sample) {
     send_times.push_back(send_time);
 
     // Publish the data
-    // publisher_pnt->put(json_string);
+    publisher_pnt->put(json_string);
     auto t7 = Clock::now();
     total_zenoh_put += std::chrono::duration_cast<Duration>(t7 - t6);
 

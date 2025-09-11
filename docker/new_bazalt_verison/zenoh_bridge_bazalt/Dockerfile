@@ -54,7 +54,7 @@ RUN git clone https://github.com/OmerFarukBOUN/zenoh-cpp.git \
 
 RUN dnf install libXrandr-devel libXinerama-devel fontconfig-devel neovim mesa-dri-drivers mesa-libGL mesa-libGLU -y
 
-RUN mkdir -p /opt/bazalt/include_/google && mv /opt/bazalt/include/google /opt/bazalt/include_/google
+RUN mkdir -p /opt/bazalt/include_ && mv /opt/bazalt/include/google /opt/bazalt/include_
 
 RUN git clone https://github.com/OmerFarukBOUN/esmini_new_controller.git \
     && cd esmini_new_controller \
@@ -63,7 +63,7 @@ RUN git clone https://github.com/OmerFarukBOUN/esmini_new_controller.git \
     && cmake .. \
     && cmake --build . --config Release --target install
 
-# RUN mv /opt/bazalt/include_/google /opt/bazalt/include/google && rm -rf /opt/bazalt/include_
+# RUN mv /opt/bazalt/include_/google /opt/bazalt/include/ && rm -rf /opt/bazalt/include_
 
 
 # RUN sudo dnf update \

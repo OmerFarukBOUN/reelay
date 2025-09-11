@@ -14,6 +14,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <variant>
+#include <cstdint>
 
 using message_type = std::variant<std::string, int32_t, int64_t, uint32_t,
                                   uint64_t, float, double, bool>;

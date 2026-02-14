@@ -19,20 +19,20 @@ find_library(OSI_LIB libopen_simulation_interface.so PATHS /usr/local/lib/osi3)
 
 
 # Add the executable
-add_executable(zenoh_bridge zenoh_bridge.cpp)
+add_executable(zenoh_protobuf zenoh_protobuf.cpp)
 
 find_package(Boost REQUIRED COMPONENTS json)
 
-target_link_libraries(zenoh_bridge PUBLIC zenohcxx::zenohc ${CUDD_LIB} Boost::json Boost::boost ${OSI_LIB} protobuf::libprotobuf) #if using zenoh-c backend
+target_link_libraries(zenoh_protobuf PUBLIC zenohcxx::zenohc ${CUDD_LIB} Boost::json Boost::boost ${OSI_LIB} protobuf::libprotobuf) #if using zenoh-c backend
 
-add_executable(zenoh_test_sub test_sub.cpp)
+# add_executable(zenoh_test_sub test_sub.cpp)
 
-target_link_libraries(zenoh_test_sub PUBLIC zenohcxx::zenohc ${CUDD_LIB} protobuf::libprotobuf Boost::json Boost::boost) #if using zenoh-c backend
+# target_link_libraries(zenoh_test_sub PUBLIC zenohcxx::zenohc ${CUDD_LIB} protobuf::libprotobuf Boost::json Boost::boost) #if using zenoh-c backend
 
-add_executable(zenoh_test_pub test_pub.cpp)
+# add_executable(zenoh_test_pub test_pub.cpp)
 
-target_link_libraries(zenoh_test_pub PUBLIC zenohcxx::zenohc ${CUDD_LIB} protobuf::libprotobuf Boost::json Boost::boost) #if using zenoh-c backend
+# target_link_libraries(zenoh_test_pub PUBLIC zenohcxx::zenohc ${CUDD_LIB} protobuf::libprotobuf Boost::json Boost::boost) #if using zenoh-c backend
 
-add_executable(zenoh_test_pub_esmini test_pub_esmini.cpp)
+# add_executable(zenoh_test_pub_esmini test_pub_esmini.cpp)
 
-target_link_libraries(zenoh_test_pub_esmini PUBLIC zenohcxx::zenohc ${CUDD_LIB} Boost::json Boost::boost ${OSI_LIB} protobuf::libprotobuf) #if using zenoh-c backend
+# target_link_libraries(zenoh_test_pub_esmini PUBLIC zenohcxx::zenohc ${CUDD_LIB} Boost::json Boost::boost ${OSI_LIB} protobuf::libprotobuf) #if using zenoh-c backend

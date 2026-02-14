@@ -81,7 +81,8 @@
         "source_location": "cpp",
         "future": "cpp",
         "shared_mutex": "cpp",
-        "typeindex": "cpp"
+        "typeindex": "cpp",
+        "regex": "cpp"
     },
     "C_Cpp.errorSquiggles": "enabled",
     "editor.tabSize": 4,

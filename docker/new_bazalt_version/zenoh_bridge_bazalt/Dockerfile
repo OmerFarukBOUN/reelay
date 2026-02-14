@@ -36,8 +36,8 @@ RUN dnf install libXrandr-devel libXinerama-devel fontconfig-devel neovim mesa-d
 
 RUN mv /opt/bazalt/include/google /opt/bazalt/include_
 
-RUN git clone https://github.com/OmerFarukBOUN/esmini_new_controller.git \
-    && cd esmini_new_controller \
+RUN git clone https://github.com/esmini/esmini.git \
+    && cd esmini \
     && mkdir build \
     && cd build \
     && cmake .. \
@@ -62,19 +62,54 @@ RUN git clone https://github.com/OpenSimulationInterface/open-simulation-interfa
 
 RUN git clone https://github.com/OmerFarukBOUN/reelay.git /zenoh-bridge \
     && cd /zenoh-bridge \
-    && make install-zenoh
+    && make install-zenoh -j$(nproc)
 
 RUN rm -rf /zenoh-bridge/apps/zenoh_bridge/build \
     && mkdir -p /zenoh-bridge/apps/zenoh_bridge/build \
     && cd /zenoh-bridge/apps/zenoh_bridge/build \
     && cmake .. \
-    && cmake --build . 
+    && cmake --build . -j$(nproc)
 
 COPY . /home/nonroot
 
 RUN mkdir -p /home/nonroot/protobufs
 
-ENTRYPOINT ["/zenoh-bridge/apps/zenoh_bridge/build/zenoh_bridge"]
+# Install rust
+RUN curl https://sh.rustup.rs -sSf | bash -s -- -y
+
+ENV PATH="/root/.cargo/bin:${PATH}"
+
+RUN rustup update
+
+
+RUN dnf install libacl-devel gcc-c++ glibc-devel \
+  libstdc++-devel \
+  clang \
+  clang-devel \
+  llvm-devel -y
+
+ENV PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+
+RUN git clone https://github.com/eclipse-iceoryx/iceoryx.git \
+&& cd iceoryx \
+&& cmake -Bbuild -Hiceoryx_meta -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ \
+# && cmake -Bbuild -Hiceoryx_meta -DCMAKE_PREFIX_PATH=$(PWD)/build/dependencies/ \
+&& cmake --build build -j$(nproc) \
+&& cmake --build build --target install
+
+RUN git clone https://github.com/eclipse-iceoryx/iceoryx2.git \
+&& cd iceoryx2 \
+&& cmake -S . -B build -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ \
+&& cmake --build build -j$(nproc) \
+&& cmake --install build
+
+RUN git clone https://github.com/google/flatbuffers.git \
+&& cd flatbuffers \
+&& cmake -S . -B build -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ \
+&& cmake --build build -j$(nproc) \
+&& cmake --install build
+
+# ENTRYPOINT ["/zenoh-bridge/apps/zenoh_bridge/build/zenoh_bridge"]
 
 
 

@@ -1,8 +1,4 @@
 #include "reelay/monitors.hpp"
-#include "reelay/zenoh_bridge/globals.hpp"
-#include "reelay/zenoh_bridge/proto_node/proto_define.hpp"
-#include "reelay/zenoh_bridge/proto_node/proto_node.hpp"
-#include "reelay/zenoh_bridge/zenoh_pub.hpp"
 
 #include <chrono>
 #include <filesystem>
@@ -10,6 +6,7 @@
 #include <iostream>
 #include <sstream>
 #include <thread>
+#include <stdio.h>
 
 #include "osi_common.pb.h"
 #include "osi_datarecording.pb.h"
@@ -43,7 +40,14 @@
 #include "osi_trafficsign.pb.h"
 #include "osi_trafficupdate.pb.h"
 #include "zenoh.hxx"
-#include <stdio.h>
+
+#include <api/LTLMonitoringPipeline.hpp>
+#include <apis/protobuf/ProtobufParser.hpp>
+#include <apis/protobuf/converters.hpp>
+#include <apis/protobuf/proto_define.hpp>
+#include <apis/zenoh/ZenohPublisher.hpp>
+#include <apis/zenoh/ZenohSubscriber.hpp>
+
 
 using namespace std::chrono_literals;
 
@@ -72,33 +76,7 @@ bool generate_monitor_node(
 
 int main()
 {
-  auto pool_ = google::protobuf::DescriptorPool::generated_pool();
-  int file_count = pool_->FindFileByName("osi_groundtruth.proto")->message_type_count();
-  for (int i = 0; i < file_count; ++i) {
-      const google::protobuf::Descriptor* descriptor = pool_->FindFileByName("osi_groundtruth.proto")->message_type(i);
-  }
-  const google::protobuf::Descriptor* message_desc = pool_->FindMessageTypeByName("osi3.GroundTruth");
-  if(message_desc == NULL) {
-  std::cerr << "Cannot get message descriptor of message: " << "osi3.GroundTruth" << std::endl;
-  return 1;
-  }
-  if(!std::filesystem::exists("/home/nonroot/protobufs")) {
-    std::cerr << "Directory /home/nonroot/protobufs does not exist" << std::endl;
-    return 1;
-  }
-  for(const auto& entry :
-      std::filesystem::directory_iterator("/home/nonroot/protobufs")) {
-    if(entry.path().extension() == ".proto") {
-      std::ifstream file(entry.path());
-      if(file.is_open()) {
-        std::stringstream buffer;
-        buffer << file.rdbuf();
-        std::string content = buffer.str();
-        std::string name = entry.path().stem().string();
-        init_protobuf(content, name);
-      }
-    }
-  }
+  init_protobufs();
   std::ifstream settings_file("/home/nonroot/settings.json");
   if(!settings_file.is_open()) {
     std::cerr << "Failed to open settings.json" << std::endl;
@@ -121,10 +99,10 @@ int main()
     settings.contains("pub_keyexpr") ? settings["pub_keyexpr"] : "output/1";
   std::string sub_keyexpr =
     settings.contains("sub_keyexpr") ? settings["sub_keyexpr"] : "esmini/gt";
-    std::cout << "pub_keyexpr: " << pub_keyexpr << std::endl;
-    std::cout << "sub_keyexpr: " << sub_keyexpr << std::endl;
-    std::cout << "monitor_pattern: " << monitor_pattern << std::endl;
-    std::cout << "message_type: " << message_type << std::endl;
+  std::cout << "pub_keyexpr: " << pub_keyexpr << std::endl;
+  std::cout << "sub_keyexpr: " << sub_keyexpr << std::endl;
+  std::cout << "monitor_pattern: " << monitor_pattern << std::endl;
+  std::cout << "message_type: " << message_type << std::endl;
   generate_monitor_node(
     pub_keyexpr,
     pub_config,
@@ -140,37 +118,33 @@ inline bool generate_monitor_node(
   std::string sub_keyexpr,
   config_type sub_config,
   std::string monitor_pattern,
-  std::string message_type)
+  std::string message_type_s)
 {
-  // Initialize the subscriber node
+  using SubMsg = std::vector<uint8_t>;
+  using MonitorMsg = std::unordered_map<std::string, message_type>;
+  using PubMsg = reelay::json;
+
   zenoh::Config sub_config_def = zenoh::Config::create_default();
   for(auto& option : sub_config.items()) {
     sub_config_def.insert_json5(option.key(), option.value().dump());
   }
   auto sub_session = zenoh::Session::open(std::move(sub_config_def));
 
-  // Initialize the monitor
-  std::cout << message_type << std::endl;
-  auto options = reelay::discrete_timed<
-                   time_type>::monitor<input_type, output_type>::options()
-                   .disable_condensing();
-
-  // Initialize the publisher node
   zenoh::Config pub_config_def = zenoh::Config::create_default();
   for(auto& option : pub_config.items()) {
     pub_config_def.insert_json5(option.key(), option.value().dump());
   }
-
-  // Ini
   auto pub_session = zenoh::Session::open(std::move(pub_config_def));
-  auto publisher = pub_session.declare_publisher(zenoh::KeyExpr(pub_keyexpr));
-  publisher_pnt = &publisher;
-  zenoh_monitor = new reelay::monitor<input_type, output_type>(
-    reelay::make_monitor(monitor_pattern, options));
-  global_proto_mapper = new proto_mapper(message_type);
-  auto subscriber = sub_session.declare_subscriber(
-    zenoh::KeyExpr(sub_keyexpr), &data_handler, zenoh::closures::none);
 
+  auto options = reelay::discrete_timed<
+                   time_type>::monitor<input_type, output_type>::options()
+                   .disable_condensing();
+  auto sub = new ZenohSubscriber(sub_session, sub_keyexpr);
+  auto parser = new ProtobufParser(message_type_s);
+  auto monitor = new reelay::monitor<input_type, output_type>(
+    reelay::make_monitor(monitor_pattern, options));
+  auto pub = new ZenohPublisher(pub_session, pub_keyexpr);
+  LTLMonitoringPipeline<SubMsg, MonitorMsg, PubMsg>(sub, parser, monitor, pub);
   while(true) {
     std::this_thread::sleep_for(1s);
   }

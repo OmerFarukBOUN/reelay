@@ -26,8 +26,10 @@
 #include <google/protobuf/reflection.h>
 #include <stdio.h>
 
-#include <reelay/zenoh_bridge/proto_node/converters.hpp>
-#include <reelay/zenoh_bridge/proto_node/path_token.hpp>
+#include <reelay/pub_sub_connection/path_token.hpp>
+#include <reelay/pub_sub_connection/globals.hpp>
+
+#include "converters.hpp"
 
 using namespace std::chrono_literals;
 using google::protobuf::FieldDescriptor;
@@ -49,12 +51,13 @@ using converter_func = message_type (*)(
   const google::protobuf::FieldDescriptor*,
   int);
 
-inline std::unordered_map<std::string, message_type> proto_map;
+// Bunları global olmayacak şekilde düzeltmek lazım
 inline google::protobuf::DynamicMessageFactory factory;
 inline google::protobuf::DescriptorPool pool;
 inline FileDescriptorProto file_desc_proto;
-inline int global_token_no;
-inline std::string last_token_no;
+inline std::unordered_map<std::string, message_type> global_token2value_map;
+inline std::string token_to_add;
+
 
 enum class message_type_enum {
   STRING,
@@ -137,9 +140,7 @@ class proto_node {
       }
     }
     else {
-      token_no = std::to_string(global_token_no);
-      global_token_no++;
-      last_token_no = token_no;
+      token_no = token_to_add;
       if(path[0].array_no != -1) {
         switch(fieldDesc->cpp_type()) {
           case FieldDescriptor::CPPTYPE_STRING:
@@ -228,9 +229,6 @@ class proto_node {
         }
       }
     }
-    else {
-      last_token_no = token_no;
-    }
   }
 
   void update(const google::protobuf::Message& msg)
@@ -254,7 +252,7 @@ class proto_node {
     }
     else {
       // std::cout << "control3" << std::endl;
-      proto_map[token_no] = convert(msg);
+      global_token2value_map[token_no] = convert(msg);
       // std::cout << "update bitti" << std::endl;
     }
   }

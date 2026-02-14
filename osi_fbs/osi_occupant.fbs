@@ -1,0 +1,46 @@
+// Generated from osi_occupant.proto
+
+include "osi_common.fbs";
+
+namespace osi3.Occupant_.Classification_;
+
+enum Seat : int {
+  SEAT_UNKNOWN = 0,
+  SEAT_OTHER = 1,
+  SEAT_FRONT_LEFT = 2,
+  SEAT_FRONT_RIGHT = 3,
+  SEAT_FRONT_MIDDLE = 4,
+  SEAT_BACK_LEFT = 5,
+  SEAT_BACK_RIGHT = 6,
+  SEAT_BACK_MIDDLE = 7,
+  SEAT_THIRD_ROW_LEFT = 8,
+  SEAT_THIRD_ROW_RIGHT = 9,
+  SEAT_THIRD_ROW_MIDDLE = 10,
+}
+
+enum SteeringControl : int {
+  STEERING_CONTROL_UNKNOWN = 0,
+  STEERING_CONTROL_OTHER = 1,
+  STEERING_CONTROL_NO_HAND = 2,
+  STEERING_CONTROL_ONE_HAND = 3,
+  STEERING_CONTROL_BOTH_HANDS = 4,
+  STEERING_CONTROL_LEFT_HAND = 5,
+  STEERING_CONTROL_RIGHT_HAND = 6,
+}
+
+namespace osi3;
+
+table Occupant {
+  id:osi3.Identifier;
+  classification:osi3.Occupant_.Classification;
+  source_reference:[osi3.ExternalReference];
+}
+
+namespace osi3.Occupant_;
+
+table Classification {
+  is_driver:bool;
+  seat:osi3.Occupant_.Classification_.Seat;
+  steering_control:osi3.Occupant_.Classification_.SteeringControl;
+}
+

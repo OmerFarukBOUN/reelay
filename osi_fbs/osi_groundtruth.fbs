@@ -1,18 +1,21 @@
-// Generated from osi_groundtruth.proto
-
-include "osi_roadmarking.fbs";
-include "osi_trafficsign.fbs";
-include "osi_object.fbs";
 include "osi_common.fbs";
 include "osi_environment.fbs";
-include "osi_referenceline.fbs";
+include "osi_trafficsign.fbs";
 include "osi_trafficlight.fbs";
-include "osi_occupant.fbs";
-include "osi_logicallane.fbs";
+include "osi_roadmarking.fbs";
 include "osi_lane.fbs";
+include "osi_logicallane.fbs";
+include "osi_referenceline.fbs";
+include "osi_object.fbs";
+include "osi_occupant.fbs";
+
+namespace osi3.GroundTruth_;
+table ProjFrameOffset {
+  position:osi3.Vector3d;
+  yaw:double;
+}
 
 namespace osi3;
-
 table GroundTruth {
   timestamp:osi3.Timestamp;
   host_vehicle_id:osi3.Identifier;
@@ -34,11 +37,3 @@ table GroundTruth {
   logical_lane:[osi3.LogicalLane];
   proj_frame_offset:osi3.GroundTruth_.ProjFrameOffset;
 }
-
-namespace osi3.GroundTruth_;
-
-table ProjFrameOffset {
-  position:osi3.Vector3d;
-  yaw:double;
-}
-

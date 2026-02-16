@@ -1,27 +1,21 @@
-// Generated from osi_referenceline.proto
-
 include "osi_common.fbs";
 
 namespace osi3.ReferenceLine_;
-
 enum Type : int {
-  TYPE_POLYLINE = 0,
-  TYPE_POLYLINE_WITH_T_AXIS = 1,
-}
-
-namespace osi3;
-
-table ReferenceLine {
-  id:osi3.Identifier;
-  type:osi3.ReferenceLine_.Type;
-  poly_line:[osi3.ReferenceLine_.ReferenceLinePoint];
+    TYPE_POLYLINE = 0,
+    TYPE_POLYLINE_WITH_T_AXIS = 1,
 }
 
 namespace osi3.ReferenceLine_;
-
 table ReferenceLinePoint {
   world_position:osi3.Vector3d;
   s_position:double;
   t_axis_yaw:double;
 }
 
+namespace osi3;
+table ReferenceLine {
+  id:osi3.Identifier;
+  type:osi3.ReferenceLine_.Type;
+  poly_line:[osi3.ReferenceLine_.ReferenceLinePoint];
+}

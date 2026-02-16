@@ -1,188 +1,76 @@
-// Generated from osi_object.proto
-
 include "osi_common.fbs";
 
 namespace osi3.StationaryObject_.Classification_;
-
 enum Type : int {
-  TYPE_UNKNOWN = 0,
-  TYPE_OTHER = 1,
-  TYPE_BRIDGE = 2,
-  TYPE_BUILDING = 3,
-  TYPE_POLE = 4,
-  TYPE_PYLON = 5,
-  TYPE_DELINEATOR = 6,
-  TYPE_TREE = 7,
-  TYPE_BARRIER = 8,
-  TYPE_VEGETATION = 9,
-  TYPE_CURBSTONE = 10,
-  TYPE_WALL = 11,
-  TYPE_VERTICAL_STRUCTURE = 12,
-  TYPE_RECTANGULAR_STRUCTURE = 13,
-  TYPE_OVERHEAD_STRUCTURE = 14,
-  TYPE_REFLECTIVE_STRUCTURE = 15,
-  TYPE_CONSTRUCTION_SITE_ELEMENT = 16,
-  TYPE_SPEED_BUMP = 17,
-  TYPE_EMITTING_STRUCTURE = 18,
+    TYPE_UNKNOWN = 0,
+    TYPE_OTHER = 1,
+    TYPE_BRIDGE = 2,
+    TYPE_BUILDING = 3,
+    TYPE_POLE = 4,
+    TYPE_PYLON = 5,
+    TYPE_DELINEATOR = 6,
+    TYPE_TREE = 7,
+    TYPE_BARRIER = 8,
+    TYPE_VEGETATION = 9,
+    TYPE_CURBSTONE = 10,
+    TYPE_WALL = 11,
+    TYPE_VERTICAL_STRUCTURE = 12,
+    TYPE_RECTANGULAR_STRUCTURE = 13,
+    TYPE_OVERHEAD_STRUCTURE = 14,
+    TYPE_REFLECTIVE_STRUCTURE = 15,
+    TYPE_CONSTRUCTION_SITE_ELEMENT = 16,
+    TYPE_SPEED_BUMP = 17,
+    TYPE_EMITTING_STRUCTURE = 18,
 }
 
+namespace osi3.StationaryObject_.Classification_;
 enum Material : int {
-  MATERIAL_UNKNOWN = 0,
-  MATERIAL_OTHER = 1,
-  MATERIAL_WOOD = 2,
-  MATERIAL_PLASTIC = 3,
-  MATERIAL_CONCRETE = 4,
-  MATERIAL_METAL = 5,
-  MATERIAL_STONE = 6,
-  MATERIAL_GLAS = 7,
-  MATERIAL_MUD = 8,
+    MATERIAL_UNKNOWN = 0,
+    MATERIAL_OTHER = 1,
+    MATERIAL_WOOD = 2,
+    MATERIAL_PLASTIC = 3,
+    MATERIAL_CONCRETE = 4,
+    MATERIAL_METAL = 5,
+    MATERIAL_STONE = 6,
+    MATERIAL_GLASS = 7,
+    MATERIAL_GLAS = 7,
+    MATERIAL_MUD = 8,
 }
 
+namespace osi3.StationaryObject_.Classification_;
 enum Density : int {
-  DENSITY_UNKNOWN = 0,
-  DENSITY_OTHER = 1,
-  DENSITY_SOLID = 2,
-  DENSITY_SMALL_MESH = 3,
-  DENSITY_MEDIAN_MESH = 4,
-  DENSITY_LARGE_MESH = 5,
-  DENSITY_OPEN = 6,
+    DENSITY_UNKNOWN = 0,
+    DENSITY_OTHER = 1,
+    DENSITY_SOLID = 2,
+    DENSITY_SMALL_MESH = 3,
+    DENSITY_MEDIAN_MESH = 4,
+    DENSITY_LARGE_MESH = 5,
+    DENSITY_OPEN = 6,
 }
 
+namespace osi3.StationaryObject_.Classification_;
 enum Color : int {
-  COLOR_UNKNOWN = 0,
-  COLOR_OTHER = 1,
-  COLOR_YELLOW = 2,
-  COLOR_GREEN = 3,
-  COLOR_BLUE = 4,
-  COLOR_VIOLET = 5,
-  COLOR_RED = 6,
-  COLOR_ORANGE = 7,
-  COLOR_BLACK = 8,
-  COLOR_GRAY = 9,
-  COLOR_WHITE = 10,
+    COLOR_UNKNOWN = 0,
+    COLOR_OTHER = 1,
+    COLOR_YELLOW = 2,
+    COLOR_GREEN = 3,
+    COLOR_BLUE = 4,
+    COLOR_VIOLET = 5,
+    COLOR_RED = 6,
+    COLOR_ORANGE = 7,
+    COLOR_BLACK = 8,
+    COLOR_GRAY = 9,
+    COLOR_GREY = 9,
+    COLOR_WHITE = 10,
 }
 
-namespace osi3.MovingObject_;
-
-enum Type : int {
-  TYPE_UNKNOWN = 0,
-  TYPE_OTHER = 1,
-  TYPE_VEHICLE = 2,
-  TYPE_PEDESTRIAN = 3,
-  TYPE_ANIMAL = 4,
-}
-
-namespace osi3.MovingObject_.VehicleClassification_;
-
-enum Type : int {
-  TYPE_UNKNOWN = 0,
-  TYPE_OTHER = 1,
-  TYPE_SMALL_CAR = 2,
-  TYPE_COMPACT_CAR = 3,
-  TYPE_CAR = 4,
-  TYPE_LUXURY_CAR = 5,
-  TYPE_DELIVERY_VAN = 6,
-  TYPE_HEAVY_TRUCK = 7,
-  TYPE_SEMITRAILER = 8,
-  TYPE_TRAILER = 9,
-  TYPE_MOTORBIKE = 10,
-  TYPE_BICYCLE = 11,
-  TYPE_BUS = 12,
-  TYPE_TRAM = 13,
-  TYPE_TRAIN = 14,
-  TYPE_WHEELCHAIR = 15,
-  TYPE_SEMITRACTOR = 16,
-  TYPE_STANDUP_SCOOTER = 17,
-  TYPE_MICROMOBILITY_DEVICE = 18,
-  TYPE_WORK_MACHINE = 19,
-  TYPE_WATERCRAFT = 20,
-  TYPE_AIRCRAFT = 21,
-  TYPE_LAND_VEHICLE = 22,
-}
-
-namespace osi3.MovingObject_.VehicleClassification_.LightState_;
-
-enum IndicatorState : int {
-  INDICATOR_STATE_UNKNOWN = 0,
-  INDICATOR_STATE_OTHER = 1,
-  INDICATOR_STATE_OFF = 2,
-  INDICATOR_STATE_LEFT = 3,
-  INDICATOR_STATE_RIGHT = 4,
-  INDICATOR_STATE_WARNING = 5,
-}
-
-enum GenericLightState : int {
-  GENERIC_LIGHT_STATE_UNKNOWN = 0,
-  GENERIC_LIGHT_STATE_OTHER = 1,
-  GENERIC_LIGHT_STATE_OFF = 2,
-  GENERIC_LIGHT_STATE_ON = 3,
-  GENERIC_LIGHT_STATE_FLASHING_BLUE = 4,
-  GENERIC_LIGHT_STATE_FLASHING_BLUE_AND_RED = 5,
-  GENERIC_LIGHT_STATE_FLASHING_AMBER = 6,
-}
-
-enum BrakeLightState : int {
-  BRAKE_LIGHT_STATE_UNKNOWN = 0,
-  BRAKE_LIGHT_STATE_OTHER = 1,
-  BRAKE_LIGHT_STATE_OFF = 2,
-  BRAKE_LIGHT_STATE_NORMAL = 3,
-  BRAKE_LIGHT_STATE_STRONG = 4,
-}
-
-namespace osi3.MovingObject_.VehicleClassification_;
-
-enum Role : int {
-  ROLE_UNKNOWN = 0,
-  ROLE_OTHER = 1,
-  ROLE_CIVIL = 2,
-  ROLE_AMBULANCE = 3,
-  ROLE_FIRE = 4,
-  ROLE_POLICE = 5,
-  ROLE_PUBLIC_TRANSPORT = 6,
-  ROLE_ROAD_ASSISTANCE = 7,
-  ROLE_GARBAGE_COLLECTION = 8,
-  ROLE_ROAD_CONSTRUCTION = 9,
-  ROLE_MILITARY = 10,
-}
-
-namespace osi3.MovingObject_.PedestrianAttributes_.Bone_;
-
-enum Type : int {
-  TYPE_ROOT = 0,
-  TYPE_HIP = 1,
-  TYPE_LOWER_SPINE = 2,
-  TYPE_UPPER_SPINE = 3,
-  TYPE_NECK = 4,
-  TYPE_HEAD = 5,
-  TYPE_SHOULDER_L = 6,
-  TYPE_SHOULDER_R = 7,
-  TYPE_UPPER_ARM_L = 8,
-  TYPE_UPPER_ARM_R = 9,
-  TYPE_LOWER_ARM_L = 10,
-  TYPE_LOWER_ARM_R = 11,
-  TYPE_FULL_HAND_L = 12,
-  TYPE_FULL_HAND_R = 13,
-  TYPE_UPPER_LEG_L = 14,
-  TYPE_UPPER_LEG_R = 15,
-  TYPE_LOWER_LEG_L = 16,
-  TYPE_LOWER_LEG_R = 17,
-  TYPE_FULL_FOOT_L = 18,
-  TYPE_FULL_FOOT_R = 19,
-}
-
-namespace osi3;
-
-table StationaryObject {
-  id:osi3.Identifier;
-  base:osi3.BaseStationary;
-  classification:osi3.StationaryObject_.Classification;
-  model_reference:string;
-  source_reference:[osi3.ExternalReference];
-  color_description:osi3.ColorDescription;
+namespace osi3.StationaryObject_.Classification_;
+table EmittingStructureAttribute {
+  wavelength_data:[osi3.WavelengthData];
+  emitted_spatial_signal_strength:[osi3.SpatialSignalStrength];
 }
 
 namespace osi3.StationaryObject_;
-
 table Classification {
   type:osi3.StationaryObject_.Classification_.Type;
   material:osi3.StationaryObject_.Classification_.Material;
@@ -194,45 +82,26 @@ table Classification {
   logical_lane_assignment:[osi3.LogicalLaneAssignment];
 }
 
-namespace osi3.StationaryObject_.Classification_;
-
-table EmittingStructureAttribute {
-  wavelength_data:[osi3.WavelengthData];
-  emitted_spatial_signal_strength:[osi3.SpatialSignalStrength];
-}
-
 namespace osi3;
-
-table MovingObject {
+table StationaryObject {
   id:osi3.Identifier;
-  base:osi3.BaseMoving;
-  type:osi3.MovingObject_.Type;
-  assigned_lane_id:[osi3.Identifier];
-  vehicle_attributes:osi3.MovingObject_.VehicleAttributes;
-  vehicle_classification:osi3.MovingObject_.VehicleClassification;
+  base:osi3.BaseStationary;
+  classification:osi3.StationaryObject_.Classification;
   model_reference:string;
-  future_trajectory:[osi3.StatePoint];
-  moving_object_classification:osi3.MovingObject_.MovingObjectClassification;
   source_reference:[osi3.ExternalReference];
   color_description:osi3.ColorDescription;
-  pedestrian_attributes:osi3.MovingObject_.PedestrianAttributes;
 }
 
 namespace osi3.MovingObject_;
-
-table VehicleAttributes {
-  driver_id:osi3.Identifier;
-  radius_wheel:double;
-  number_wheels:uint;
-  bbcenter_to_rear:osi3.Vector3d;
-  bbcenter_to_front:osi3.Vector3d;
-  ground_clearance:double;
-  wheel_data:[osi3.MovingObject_.VehicleAttributes_.WheelData];
-  steering_wheel_angle:double;
+enum Type : int {
+    TYPE_UNKNOWN = 0,
+    TYPE_OTHER = 1,
+    TYPE_VEHICLE = 2,
+    TYPE_PEDESTRIAN = 3,
+    TYPE_ANIMAL = 4,
 }
 
 namespace osi3.MovingObject_.VehicleAttributes_;
-
 table WheelData {
   axle:uint;
   index:uint;
@@ -247,23 +116,100 @@ table WheelData {
 }
 
 namespace osi3.MovingObject_;
+table VehicleAttributes {
+  driver_id:osi3.Identifier;
+  radius_wheel:double;
+  number_wheels:uint;
+  bbcenter_to_rear:osi3.Vector3d;
+  bbcenter_to_front:osi3.Vector3d;
+  ground_clearance:double;
+  wheel_data:[osi3.MovingObject_.VehicleAttributes_.WheelData];
+  steering_wheel_angle:double;
+}
 
+namespace osi3.MovingObject_;
 table MovingObjectClassification {
   assigned_lane_id:[osi3.Identifier];
   assigned_lane_percentage:[double];
   logical_lane_assignment:[osi3.LogicalLaneAssignment];
 }
 
-table VehicleClassification {
-  type:osi3.MovingObject_.VehicleClassification_.Type;
-  light_state:osi3.MovingObject_.VehicleClassification_.LightState;
-  has_trailer:bool;
-  trailer_id:osi3.Identifier;
-  role:osi3.MovingObject_.VehicleClassification_.Role;
+namespace osi3.MovingObject_.VehicleClassification_;
+enum Type : int {
+    TYPE_UNKNOWN = 0,
+    TYPE_OTHER = 1,
+    TYPE_SMALL_CAR = 2,
+    TYPE_COMPACT_CAR = 3,
+    TYPE_CAR = 4,
+    TYPE_MEDIUM_CAR = 4,
+    TYPE_LUXURY_CAR = 5,
+    TYPE_DELIVERY_VAN = 6,
+    TYPE_VAN = 6,
+    TYPE_HEAVY_TRUCK = 7,
+    TYPE_SEMITRACTOR = 16,
+    TYPE_SEMITRAILER = 8,
+    TYPE_TRAILER = 9,
+    TYPE_MOTORBIKE = 10,
+    TYPE_MOTORCYCLE = 10,
+    TYPE_BICYCLE = 11,
+    TYPE_BUS = 12,
+    TYPE_TRAM = 13,
+    TYPE_TRAIN = 14,
+    TYPE_WHEELCHAIR = 15,
+    TYPE_STANDUP_SCOOTER = 17,
+    TYPE_MICROMOBILITY_DEVICE = 18,
+    TYPE_WORK_MACHINE = 19,
+    TYPE_WATERCRAFT = 20,
+    TYPE_AIRCRAFT = 21,
+    TYPE_LAND_VEHICLE = 22,
 }
 
 namespace osi3.MovingObject_.VehicleClassification_;
+enum Role : int {
+    ROLE_UNKNOWN = 0,
+    ROLE_OTHER = 1,
+    ROLE_CIVIL = 2,
+    ROLE_AMBULANCE = 3,
+    ROLE_FIRE = 4,
+    ROLE_POLICE = 5,
+    ROLE_PUBLIC_TRANSPORT = 6,
+    ROLE_ROAD_ASSISTANCE = 7,
+    ROLE_GARBAGE_COLLECTION = 8,
+    ROLE_ROAD_CONSTRUCTION = 9,
+    ROLE_MILITARY = 10,
+}
 
+namespace osi3.MovingObject_.VehicleClassification_.LightState_;
+enum IndicatorState : int {
+    INDICATOR_STATE_UNKNOWN = 0,
+    INDICATOR_STATE_OTHER = 1,
+    INDICATOR_STATE_OFF = 2,
+    INDICATOR_STATE_LEFT = 3,
+    INDICATOR_STATE_RIGHT = 4,
+    INDICATOR_STATE_WARNING = 5,
+}
+
+namespace osi3.MovingObject_.VehicleClassification_.LightState_;
+enum GenericLightState : int {
+    GENERIC_LIGHT_STATE_UNKNOWN = 0,
+    GENERIC_LIGHT_STATE_OTHER = 1,
+    GENERIC_LIGHT_STATE_OFF = 2,
+    GENERIC_LIGHT_STATE_ON = 3,
+    GENERIC_LIGHT_STATE_FLASHING_BLUE = 4,
+    GENERIC_LIGHT_STATE_FLASHING_BLUE_AND_RED = 5,
+    GENERIC_LIGHT_STATE_FLASHING_AMBER = 6,
+}
+
+namespace osi3.MovingObject_.VehicleClassification_.LightState_;
+enum BrakeLightState : int {
+    BRAKE_LIGHT_STATE_UNKNOWN = 0,
+    BRAKE_LIGHT_STATE_OTHER = 1,
+    BRAKE_LIGHT_STATE_OFF = 2,
+    BRAKE_LIGHT_STATE_NORMAL = 3,
+    BRAKE_LIGHT_STATE_STRONG = 4,
+}
+
+namespace osi3.MovingObject_.VehicleClassification_;
 table LightState {
   indicator_state:osi3.MovingObject_.VehicleClassification_.LightState_.IndicatorState;
   front_fog_light:osi3.MovingObject_.VehicleClassification_.LightState_.GenericLightState;
@@ -279,14 +225,39 @@ table LightState {
 }
 
 namespace osi3.MovingObject_;
+table VehicleClassification {
+  type:osi3.MovingObject_.VehicleClassification_.Type;
+  light_state:osi3.MovingObject_.VehicleClassification_.LightState;
+  has_trailer:bool;
+  trailer_id:osi3.Identifier;
+  role:osi3.MovingObject_.VehicleClassification_.Role;
+}
 
-table PedestrianAttributes {
-  bbcenter_to_root:osi3.Vector3d;
-  skeleton_bone:[osi3.MovingObject_.PedestrianAttributes_.Bone];
+namespace osi3.MovingObject_.PedestrianAttributes_.Bone_;
+enum Type : int {
+    TYPE_ROOT = 0,
+    TYPE_HIP = 1,
+    TYPE_LOWER_SPINE = 2,
+    TYPE_UPPER_SPINE = 3,
+    TYPE_NECK = 4,
+    TYPE_HEAD = 5,
+    TYPE_SHOULDER_L = 6,
+    TYPE_SHOULDER_R = 7,
+    TYPE_UPPER_ARM_L = 8,
+    TYPE_UPPER_ARM_R = 9,
+    TYPE_LOWER_ARM_L = 10,
+    TYPE_LOWER_ARM_R = 11,
+    TYPE_FULL_HAND_L = 12,
+    TYPE_FULL_HAND_R = 13,
+    TYPE_UPPER_LEG_L = 14,
+    TYPE_UPPER_LEG_R = 15,
+    TYPE_LOWER_LEG_L = 16,
+    TYPE_LOWER_LEG_R = 17,
+    TYPE_FULL_FOOT_L = 18,
+    TYPE_FULL_FOOT_R = 19,
 }
 
 namespace osi3.MovingObject_.PedestrianAttributes_;
-
 table Bone {
   type:osi3.MovingObject_.PedestrianAttributes_.Bone_.Type;
   position:osi3.Vector3d;
@@ -297,3 +268,24 @@ table Bone {
   orientation_rate:osi3.Orientation3d;
 }
 
+namespace osi3.MovingObject_;
+table PedestrianAttributes {
+  bbcenter_to_root:osi3.Vector3d;
+  skeleton_bone:[osi3.MovingObject_.PedestrianAttributes_.Bone];
+}
+
+namespace osi3;
+table MovingObject {
+  id:osi3.Identifier;
+  base:osi3.BaseMoving;
+  type:osi3.MovingObject_.Type;
+  assigned_lane_id:[osi3.Identifier];
+  vehicle_attributes:osi3.MovingObject_.VehicleAttributes;
+  vehicle_classification:osi3.MovingObject_.VehicleClassification;
+  model_reference:string;
+  future_trajectory:[osi3.StatePoint];
+  moving_object_classification:osi3.MovingObject_.MovingObjectClassification;
+  source_reference:[osi3.ExternalReference];
+  color_description:osi3.ColorDescription;
+  pedestrian_attributes:osi3.MovingObject_.PedestrianAttributes;
+}

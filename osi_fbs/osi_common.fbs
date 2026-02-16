@@ -1,68 +1,62 @@
-// Generated from osi_common.proto
-
-namespace osi3.BoundingBox_;
-
-enum Type : int {
-  TYPE_UNKNOWN = 0,
-  TYPE_OTHER = 1,
-  TYPE_BASE_STRUCTURE = 2,
-  TYPE_PROTRUDING_STRUCTURE = 3,
-  TYPE_CARGO = 4,
-  TYPE_DOOR = 5,
-  TYPE_SIDE_MIRROR = 6,
-}
-
 namespace osi3;
-
 table Vector3d {
   x:double;
   y:double;
   z:double;
 }
 
+namespace osi3;
 table Vector2d {
   x:double;
   y:double;
 }
 
+namespace osi3;
 table Timestamp {
   seconds:long;
   nanos:uint;
 }
 
+namespace osi3;
 table Dimension3d {
   length:double;
   width:double;
   height:double;
 }
 
+namespace osi3;
 table Orientation3d {
   roll:double;
   pitch:double;
   yaw:double;
 }
 
+namespace osi3;
 table Identifier {
   value:ulong;
 }
 
+namespace osi3;
 table ExternalReference {
   reference:string;
   type:string;
   identifier:[string];
 }
 
+namespace osi3;
 table MountingPosition {
   position:osi3.Vector3d;
   orientation:osi3.Orientation3d;
 }
 
+namespace osi3;
 table Spherical3d {
   distance:double;
   azimuth:double;
   elevation:double;
 }
 
+namespace osi3;
 table LogicalLaneAssignment {
   assigned_lane_id:osi3.Identifier;
   s_position:double;
@@ -70,6 +64,18 @@ table LogicalLaneAssignment {
   angle_to_lane:double;
 }
 
+namespace osi3.BoundingBox_;
+enum Type : int {
+    TYPE_UNKNOWN = 0,
+    TYPE_OTHER = 1,
+    TYPE_BASE_STRUCTURE = 2,
+    TYPE_PROTRUDING_STRUCTURE = 3,
+    TYPE_CARGO = 4,
+    TYPE_DOOR = 5,
+    TYPE_SIDE_MIRROR = 6,
+}
+
+namespace osi3;
 table BoundingBox {
   dimension:osi3.Dimension3d;
   position:osi3.Vector3d;
@@ -78,6 +84,7 @@ table BoundingBox {
   model_reference:string;
 }
 
+namespace osi3;
 table BaseStationary {
   dimension:osi3.Dimension3d;
   position:osi3.Vector3d;
@@ -86,6 +93,7 @@ table BaseStationary {
   bounding_box_section:[osi3.BoundingBox];
 }
 
+namespace osi3;
 table BaseMoving {
   dimension:osi3.Dimension3d;
   position:osi3.Vector3d;
@@ -98,24 +106,28 @@ table BaseMoving {
   bounding_box_section:[osi3.BoundingBox];
 }
 
+namespace osi3;
 table StatePoint {
   timestamp:osi3.Timestamp;
   position:osi3.Vector3d;
   orientation:osi3.Orientation3d;
 }
 
+namespace osi3;
 table WavelengthData {
   start:double;
   end:double;
   samples_number:double;
 }
 
+namespace osi3;
 table SpatialSignalStrength {
   horizontal_angle:double;
   vertical_angle:double;
   signal_strength:double;
 }
 
+namespace osi3;
 table ColorDescription {
   grey:osi3.ColorGrey;
   rgb:osi3.ColorRGB;
@@ -125,16 +137,19 @@ table ColorDescription {
   cmyk:osi3.ColorCMYK;
 }
 
+namespace osi3;
 table ColorGrey {
   grey:double;
 }
 
+namespace osi3;
 table ColorRGB {
   red:double;
   green:double;
   blue:double;
 }
 
+namespace osi3;
 table ColorRGBIR {
   red:double;
   green:double;
@@ -142,18 +157,21 @@ table ColorRGBIR {
   infrared:double;
 }
 
+namespace osi3;
 table ColorHSV {
   hue:double;
   saturation:double;
   value:double;
 }
 
+namespace osi3;
 table ColorLUV {
   luminance:double;
   u:double;
   v:double;
 }
 
+namespace osi3;
 table ColorCMYK {
   cyan:double;
   magenta:double;
@@ -161,30 +179,34 @@ table ColorCMYK {
   key:double;
 }
 
+namespace osi3;
 table Pedalry {
   pedal_position_acceleration:double;
   pedal_position_brake:double;
   pedal_position_clutch:double;
 }
 
+namespace osi3;
 table VehicleSteeringWheel {
   angle:double;
   angular_speed:double;
   torque:double;
 }
 
+namespace osi3;
 table GeodeticPosition {
   longitude:double;
   latitude:double;
   altitude:double;
 }
 
+namespace osi3;
 table KeyValuePair {
   key:string;
   value:string;
 }
 
+namespace osi3;
 table Polygon3d {
   vertex:[osi3.Vector3d];
 }
-

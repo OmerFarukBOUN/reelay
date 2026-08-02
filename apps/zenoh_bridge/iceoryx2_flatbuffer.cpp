@@ -1,4 +1,4 @@
-#include <api/LTLMonitoringPipeline.hpp>
+#include "base/LTLMonitoringPipeline.hpp"
 #include <apis/iceoryx2/v0.8.0/Iceoryx2Publisher.hpp>
 #include <apis/iceoryx2/v0.8.0/Iceoryx2Subscriber.hpp>
 #include <apis/flatbuffer/FlatbufferParser.hpp>

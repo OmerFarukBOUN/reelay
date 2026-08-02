@@ -1,7 +1,7 @@
 #include <functional>
 #include <vector>
 
-#include "api/ReelaySubscriber.hpp"
+#include "base/ReelaySubscriber.hpp"
 #include "iox2/iceoryx2.hpp"
 
 constexpr iox2::bb::Duration CYCLE_TIME = iox2::bb::Duration::from_millis(1);

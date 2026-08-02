@@ -41,7 +41,7 @@
 #include "osi_trafficupdate.pb.h"
 #include "zenoh.hxx"
 
-#include <api/LTLMonitoringPipeline.hpp>
+#include "base/LTLMonitoringPipeline.hpp>
 #include <apis/protobuf/ProtobufParser.hpp>
 #include <apis/protobuf/converters.hpp>
 #include <apis/protobuf/proto_define.hpp>

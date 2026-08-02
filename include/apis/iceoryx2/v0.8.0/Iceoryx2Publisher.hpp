@@ -1,6 +1,6 @@
 #include "reelay/monitors.hpp"
 
-#include "api/ReelayPublisher.hpp"
+#include "base/ReelayPublisher.hpp"
 #include "iox2/iceoryx2.hpp"
 
 using monitor_output_type = reelay::json;

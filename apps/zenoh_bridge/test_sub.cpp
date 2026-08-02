@@ -52,7 +52,7 @@ int main(int argc, char* argv[])
             }
 
             // Save JSON object to file
-            std::ofstream file("/zenoh-bridge/receiver.json");
+            std::ofstream file("/pub_sub_reelay/receiver.json");
             file << json_data.dump(4); // Save JSON object with indentation
             file.close();
             break;

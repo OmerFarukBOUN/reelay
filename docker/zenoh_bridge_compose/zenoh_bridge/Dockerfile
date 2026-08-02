@@ -80,8 +80,8 @@ RUN sudo apt-get update \
 RUN sudo apt-get update \
     && sudo apt-get install -y python3-scipy python3-matplotlib
 
-RUN git clone https://github.com/OmerFarukBOUN/reelay.git /zenoh-bridge \
-    && cd /zenoh-bridge \
+RUN git clone https://github.com/sebatkar/reelay.git /pub_sub_reelay \
+    && cd /pub_sub_reelay \
     && sudo -E make install-zenoh \
     && echo "J"
 
@@ -91,21 +91,21 @@ COPY . /home/nonroot
 
 RUN mkdir -p /home/nonroot/protobufs
 
-RUN rm -rf /zenoh-bridge/apps/zenoh_bridge/build \
-    && mkdir -p /zenoh-bridge/apps/zenoh_bridge/build \
-    && cd /zenoh-bridge/apps/zenoh_bridge/build \
+RUN rm -rf /pub_sub_reelay/apps/zenoh_bridge/build \
+    && mkdir -p /pub_sub_reelay/apps/zenoh_bridge/build \
+    && cd /pub_sub_reelay/apps/zenoh_bridge/build \
     && cmake .. \
     && cmake --build . 
 
-# RUN cd /zenoh-bridge/apps/zenoh_bridge/build \
+# RUN cd /pub_sub_reelay/apps/zenoh_bridge/build \
 #     && chmod +x ./zenoh_bridge ./zenoh_test_pub \
 #     && (timeout 4 ./zenoh_bridge &) \
 #     && sleep 1 \
-#     && (timeout 2 /zenoh-bridge/apps/zenoh_bridge/build/zenoh_test_pub &)
+#     && (timeout 2 /pub_sub_reelay/apps/zenoh_bridge/build/zenoh_test_pub &)
 
 
 
-ENTRYPOINT ["/zenoh-bridge/apps/zenoh_bridge/build/zenoh_bridge"]
+ENTRYPOINT ["/pub_sub_reelay/apps/zenoh_bridge/build/zenoh_bridge"]
 
 
 

@@ -11,7 +11,7 @@ include_directories(/usr/local/include/)
 include_directories(/opt/bazalt/include/)
 include_directories(/opt/bazalt/include/zenoh/)
 include_directories(/opt/bazalt/lib64/)
-include_directories(/zenoh-bridge/bruh/)
+include_directories(/pub_sub_reelay/bruh/)
 
 set(Protobuf_INCLUDE_DIR "/opt/bazalt/include")
 set(Protobuf_LIBRARIES "/opt/bazalt/lib/libprotobuf.so")
@@ -48,7 +48,7 @@ find_library(OSI_LIB libopen_simulation_interface.so PATHS /usr/local/lib/osi3)
 
 # Add the executable
 add_executable(proto_fbs proto_fbs_converter.cpp)
-target_include_directories(proto_fbs PUBLIC /zenoh-bridge/osi_fbs/)
+target_include_directories(proto_fbs PUBLIC /pub_sub_reelay/osi_fbs/)
 
 target_link_libraries(proto_fbs PUBLIC ${OSI_LIB} protobuf::libprotobuf)# ${YAML_CPP_LIB}) #if using zenoh-c backend
 

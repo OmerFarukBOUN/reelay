@@ -77,8 +77,8 @@ RUN sudo apt-get update \
     libpoppler-dev libdcmtk-dev libgstreamer1.0-dev libgtk2.0-dev libcairo2-dev \
     libpoppler-glib-dev libxrandr-dev libxinerama-dev curl cmake black -y
 
-RUN git clone https://github.com/OmerFarukBOUN/reelay.git /zenoh-bridge \
-    && cd /zenoh-bridge \
+RUN git clone https://github.com/sebatkar/reelay.git /pub_sub_reelay \
+    && cd /pub_sub_reelay \
     && sudo -E make install-zenoh \
     && echo "v"
 
@@ -86,9 +86,9 @@ RUN git clone https://github.com/OmerFarukBOUN/reelay.git /zenoh-bridge \
 
 # RUN mkdir -p /home/nonroot/protobufs
 
-RUN rm -rf /zenoh-bridge/apps/zenoh_bridge/build \
-    && mkdir -p /zenoh-bridge/apps/zenoh_bridge/build \
-    && cd /zenoh-bridge/apps/zenoh_bridge/build \
+RUN rm -rf /pub_sub_reelay/apps/zenoh_bridge/build \
+    && mkdir -p /pub_sub_reelay/apps/zenoh_bridge/build \
+    && cd /pub_sub_reelay/apps/zenoh_bridge/build \
     && cmake .. \
     && cmake --build .
 
@@ -101,11 +101,11 @@ WORKDIR /esmini-demo
 ENTRYPOINT [ "/esmini-demo/entrypoint.sh" ]
 
 
-# RUN cd /zenoh-bridge/apps/zenoh_bridge/build \
+# RUN cd /pub_sub_reelay/apps/zenoh_bridge/build \
 #     && chmod +x ./zenoh_bridge ./zenoh_test_pub \
 #     && (timeout 4 ./zenoh_bridge &) \
 #     && sleep 1 \
-#     && (timeout 2 /zenoh-bridge/apps/zenoh_bridge/build/zenoh_test_pub &)
+#     && (timeout 2 /pub_sub_reelay/apps/zenoh_bridge/build/zenoh_test_pub &)
 
 # COPY . /home/nonroot
 

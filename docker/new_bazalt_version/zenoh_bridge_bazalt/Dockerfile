@@ -27,7 +27,7 @@ RUN git clone --depth 1 --branch v3.2.2 https://github.com/lemire/simdjson.git /
     && rm -rf /tmp/simdjson
 
 # Install zenoh-cpp
-RUN git clone https://github.com/OmerFarukBOUN/zenoh-cpp.git /tmp/zenoh-cpp \
+RUN git clone https://github.com/sebatkar/zenoh-cpp.git /tmp/zenoh-cpp \
     && cmake -S/tmp/zenoh-cpp -B/tmp/zenoh-cpp/build -DCMAKE_PREFIX_PATH=/opt/bazalt \
     && cmake --build /tmp/zenoh-cpp/build --target install -j$(nproc) \
     && rm -rf /tmp/zenoh-cpp
@@ -37,8 +37,8 @@ RUN git clone https://github.com/google/flatbuffers.git /tmp/flatbuffers \
     && cmake --build /tmp/flatbuffers/build --target install -j$(nproc) \
     && rm -rf /tmp/flatbuffers
 
-RUN git clone https://github.com/OmerFarukBOUN/reelay.git /zenoh-bridge \
-    && cd /zenoh-bridge \
+RUN git clone https://github.com/sebatkar/reelay.git /pub_sub_reelay \
+    && cd /pub_sub_reelay \
     && make install-zenoh -j$(nproc)
 
 RUN git clone https://github.com/OpenSimulationInterface/open-simulation-interface.git /tmp/osi \
@@ -46,7 +46,7 @@ RUN git clone https://github.com/OpenSimulationInterface/open-simulation-interfa
 
 RUN mv /opt/bazalt/include/google /opt/bazalt/include_
 
-# RUN git clone https://github.com/OmerFarukBOUN/esmini_new_controller.git /tmp/esmini \
+# RUN git clone https://github.com/sebatkar/esmini_new_controller.git /tmp/esmini \
 #     && cmake -S/tmp/esmini -B/tmp/esmini/build  \
 #     && cmake --build /tmp/esmini/build --config Release --target install -j$(nproc) \
 #     && rm -rf /tmp/esmini
@@ -69,9 +69,9 @@ RUN mv /opt/bazalt/include/google /opt/bazalt/include_
 # #     && make \
 # #     && make install
 
-# RUN rm -rf /zenoh-bridge/apps/zenoh_bridge/build \
-#     && mkdir -p /zenoh-bridge/apps/zenoh_bridge/build \
-#     && cd /zenoh-bridge/apps/zenoh_bridge/build \
+# RUN rm -rf /pub_sub_reelay/apps/zenoh_bridge/build \
+#     && mkdir -p /pub_sub_reelay/apps/zenoh_bridge/build \
+#     && cd /pub_sub_reelay/apps/zenoh_bridge/build \
 #     && cmake .. \
 #     && cmake --build . -j$(nproc)
 
@@ -110,7 +110,7 @@ RUN mv /opt/bazalt/include/google /opt/bazalt/include_
 
 
 
-# # ENTRYPOINT ["/zenoh-bridge/apps/zenoh_bridge/build/zenoh_bridge"]
+# # ENTRYPOINT ["/pub_sub_reelay/apps/zenoh_bridge/build/zenoh_bridge"]
 
 
 

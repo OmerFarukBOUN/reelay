@@ -6,7 +6,7 @@
 auto main () -> int {
 	auto publisher = Iceoryx2Publisher("/esmini/out");
 	auto subscriber = Iceoryx2Subscriber("/reelay/out");
-	init_flatbuffers("/zenoh-bridge/apps/zenoh_bridge/flatbuffers");
+	init_flatbuffers("/pub_sub_reelay/apps/zenoh_bridge/flatbuffers");
 	auto parser = FlatbufferParser();
 	auto pipeline = reelay::LTLMonitoringPipeline(parser, publisher, subscriber);
 }

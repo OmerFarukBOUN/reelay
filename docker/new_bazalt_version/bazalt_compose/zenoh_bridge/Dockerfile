@@ -25,7 +25,7 @@ RUN git clone --depth 1 --branch v3.2.2 https://github.com/lemire/simdjson.git /
     && rm -rf /tmp/simdjson
 
 # Install zenoh-cpp
-RUN git clone https://github.com/OmerFarukBOUN/zenoh-cpp.git \
+RUN git clone https://github.com/sebatkar/zenoh-cpp.git \
     && cd zenoh-cpp \
     && mkdir build \
     && cd build \
@@ -36,7 +36,7 @@ RUN dnf install libXrandr-devel libXinerama-devel fontconfig-devel neovim mesa-d
 
 RUN mv /opt/bazalt/include/google /opt/bazalt/include_
 
-RUN git clone https://github.com/OmerFarukBOUN/esmini_new_controller.git \
+RUN git clone https://github.com/sebatkar/esmini_new_controller.git \
     && cd esmini_new_controller \
     && mkdir build \
     && cd build \
@@ -61,16 +61,16 @@ RUN git clone https://github.com/OpenSimulationInterface/open-simulation-interfa
     && make install
 
 
-RUN git clone https://github.com/OmerFarukBOUN/reelay.git /zenoh-bridge \
-    && cd /zenoh-bridge \
+RUN git clone https://github.com/sebatkar/reelay.git /pub_sub_reelay \
+    && cd /pub_sub_reelay \
     && make install-zenoh \
     && echo "A"
 
-# RUN cd zenoh-bridge && git fetch origin && git checkout main && git pull origin main
+# RUN cd pub_sub_reelay && git fetch origin && git checkout main && git pull origin main
 
-RUN rm -rf /zenoh-bridge/apps/zenoh_bridge/build \
-    && mkdir -p /zenoh-bridge/apps/zenoh_bridge/build \
-    && cd /zenoh-bridge/apps/zenoh_bridge/build \
+RUN rm -rf /pub_sub_reelay/apps/zenoh_bridge/build \
+    && mkdir -p /pub_sub_reelay/apps/zenoh_bridge/build \
+    && cd /pub_sub_reelay/apps/zenoh_bridge/build \
     && cmake .. \
     && cmake --build . 
 

@@ -1,5 +1,5 @@
 #!/bin/bash
-/zenoh-bridge/apps/zenoh_bridge/build/esmini_zenoh &
+/pub_sub_reelay/apps/zenoh_bridge/build/esmini_zenoh &
 
 sleep 5
 

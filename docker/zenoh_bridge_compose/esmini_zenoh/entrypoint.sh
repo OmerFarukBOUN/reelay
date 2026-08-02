@@ -1,11 +1,11 @@
 #!/bin/bash
-/zenoh-bridge/apps/zenoh_bridge/build/esmini_zenoh &
+/pub_sub_reelay/apps/zenoh_bridge/build/esmini_zenoh &
 
 sleep 5
 
 echo "Current directory: $(pwd)"
 
-/zenoh-bridge/apps/zenoh_bridge/build/zenoh_test_sub &
+/pub_sub_reelay/apps/zenoh_bridge/build/zenoh_test_sub &
 
 sleep 5
 
@@ -15,4 +15,4 @@ wait &&
 
 sleep 1 
 
-python3 /zenoh-bridge/data.py
+python3 /pub_sub_reelay/data.py

@@ -27,7 +27,7 @@
 // User macros (string literals)
 #define test_path "/timescales/fullsuite/"
 #define settings_path "/home/nonroot/settings.json"
-#define zenoh_bridge "/zenoh-bridge/apps/zenoh_bridge/build/zenoh_bridge"
+#define zenoh_bridge "/pub_sub_reelay/apps/zenoh_bridge/build/zenoh_bridge"
 
 namespace fs = std::filesystem;
 using json = nlohmann::json;
@@ -255,7 +255,7 @@ int main(int argc, char** argv)
         // one
         while(
           std::system(
-            "pkill -9 -f /zenoh-bridge/apps/zenoh_bridge/build/zenoh_bridge > "
+            "pkill -9 -f /pub_sub_reelay/apps/zenoh_bridge/build/zenoh_bridge > "
             "/dev/null") == 0) {
           std::cerr << "Killed the non-terminated one." << std::endl;
           std::this_thread::sleep_for(std::chrono::milliseconds(500));
